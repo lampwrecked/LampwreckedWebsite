@@ -29,7 +29,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* ─── HERO ─── */
 .hero{padding-top:64px;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:5rem;padding-left:2.5rem;padding-right:2.5rem;border-bottom:1px solid var(--gd);position:relative;overflow:hidden}
-.hero-video{width:100vw;margin-left:-2.5rem;aspect-ratio:16/9;max-height:55vh;overflow:hidden;background:var(--gd);position:relative;border-bottom:1px solid var(--gd);margin-bottom:2.5rem}
+.hero-video{width:min(85vw,520px);margin:0 auto 2.5rem;aspect-ratio:4/5;max-height:75vh;overflow:hidden;background:var(--gd);position:relative;border:1px solid var(--gd)}
 .hero-video video{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.95) contrast(1.02)}
 .hero-video::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,10,.5) 0%,rgba(10,10,10,0) 25%,rgba(10,10,10,0) 75%,rgba(10,10,10,.7) 100%);pointer-events:none}
 .hc{position:relative;z-index:2;max-width:900px}
@@ -59,7 +59,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.02em}
 .card-media{position:absolute;inset:0;z-index:0;overflow:hidden}
 .card-media video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease,filter .4s ease;filter:saturate(.85) contrast(1.05)}
 .card:hover .card-media video{transform:scale(1.04);filter:saturate(1) contrast(1.05)}
-.card-media::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.92) 0%,rgba(10,10,10,.7) 30%,rgba(10,10,10,.25) 60%,rgba(10,10,10,.1) 100%);z-index:1;pointer-events:none}
+.card-media::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95) 0%,rgba(10,10,10,.85) 40%,rgba(10,10,10,.7) 70%,rgba(10,10,10,.55) 100%);z-index:1;pointer-events:none}
 .card-content{position:relative;z-index:2;padding:2.5rem;display:flex;flex-direction:column;gap:1.25rem;min-height:420px}
 .tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--white);border:1px solid rgba(244,244,240,.4);background:rgba(10,10,10,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:inline-block;padding:.25rem .65rem;width:fit-content}
 .cn{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--gl);position:absolute;top:1rem;right:1.5rem;letter-spacing:.1em;z-index:3;opacity:.7}
@@ -131,7 +131,7 @@ section{padding:4rem 1.25rem}.hero{padding-left:1.25rem;padding-right:1.25rem}
 .card{min-height:380px}.card-content{min-height:380px;padding:2rem}
 footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.25rem}
 .ticker{margin-left:-1.25rem}
-.hero-video{margin-left:-1.25rem;width:100vw}
+.hero-video{width:100%;margin-left:0;max-height:none}
 }
 </style>
 </head>
