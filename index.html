@@ -41,7 +41,7 @@ h1{font-size:clamp(3rem,8vw,7rem);font-weight:700;line-height:.95;letter-spacing
 .ticker{margin-top:1.25rem;border-top:1px solid var(--gd);border-bottom:1px solid var(--gd);overflow:hidden;white-space:nowrap;width:100vw;margin-left:calc(-2.5rem - 1.25rem);padding:0;position:relative;background:rgba(10,10,10,.7)}
 .ticker-track{display:inline-block;animation:scroll 60s linear infinite;font-family:'Space Mono',monospace;font-size:.78rem;color:var(--gm);letter-spacing:.18em;text-transform:uppercase;padding:.85rem 0}
 .ticker-track span{margin:0 1.25rem}
-.ticker-track .acc{color:var(--white)}
+.ticker-track .acc{color:var(--gm)}
 @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* ─── SECTIONS ─── */
@@ -70,30 +70,36 @@ h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.02em}
 
 /* ─── ABOUT ─── */
 .ag{display:grid;grid-template-columns:1fr 1.6fr;gap:5rem;align-items:start}
-.als{display:flex;flex-direction:column;gap:.4rem;margin-bottom:2.5rem}
-.ar{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gm);display:flex;align-items:center;gap:.6rem}
-.ar::before{content:'';width:20px;height:1px;background:var(--gm)}
 .an{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.03em;line-height:1}
 .ap{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gm);margin-top:.75rem}
 .aright p{font-size:1.05rem;color:var(--gl);line-height:1.8;margin-bottom:1.5rem}
 .aright p:last-child{margin-bottom:0}
-.pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2.5rem}
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--gd)}
 .pill{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .75rem;border:1px solid var(--gd);color:var(--gm)}
 
 /* ─── EXPERIENCE ─── */
 #experience{padding:6rem 2.5rem;border-bottom:1px solid var(--gd);position:relative;z-index:1;background:rgba(10,10,10,.55)}
 .xp-list{display:flex;flex-direction:column}
-.xp{display:grid;grid-template-columns:180px 1fr 140px;gap:2rem;padding:1.4rem 0;border-bottom:1px solid var(--gd);align-items:baseline;transition:padding-left .2s,background .2s}
-.xp:first-child{border-top:1px solid var(--gd)}
+.xp{display:grid;grid-template-columns:180px 1fr 140px;gap:2rem;padding:1.1rem 0;border-top:1px solid var(--gd);align-items:baseline;transition:padding-left .2s,background .2s}
 .xp:hover{padding-left:.75rem;background:rgba(244,244,240,.02)}
+.xp-group-body .xp:first-child{border-top:1px solid var(--gd)}
+.xp-group-body{padding-bottom:.5rem}
 .xp-date{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--gm);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .xp-title{font-size:1rem;font-weight:500;color:var(--white);line-height:1.45}
 .xp-title em{font-style:italic;color:var(--gl);font-weight:400}
 .xp-venue{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--gm);letter-spacing:.08em;text-transform:uppercase;text-align:right}
-.xp-group{margin-top:3rem}
-.xp-group:first-child{margin-top:0}
-.xp-group-head{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--gm);letter-spacing:.2em;text-transform:uppercase;padding-bottom:1rem;margin-bottom:0;display:flex;align-items:center;gap:1rem}
-.xp-group-head::after{content:'';flex:1;height:1px;background:var(--gd)}
+.xp-group{margin-top:1rem;border-top:1px solid var(--gd)}
+.xp-group:first-of-type{margin-top:0}
+.xp-group-head{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--white);letter-spacing:.18em;text-transform:uppercase;padding:1.25rem 0;display:flex;align-items:center;gap:1rem;cursor:pointer;background:none;border:none;width:100%;text-align:left;transition:color .2s}
+.xp-group-head:hover{color:var(--gl)}
+.xp-group-head .xp-count{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--gm);letter-spacing:.1em;margin-left:auto;padding-right:.5rem}
+.xp-group-head .xp-caret{display:inline-block;width:12px;height:12px;position:relative;flex-shrink:0;transition:transform .25s ease}
+.xp-group-head .xp-caret::before,.xp-group-head .xp-caret::after{content:'';position:absolute;background:var(--white);left:50%;top:50%}
+.xp-group-head .xp-caret::before{width:12px;height:1px;transform:translate(-50%,-50%)}
+.xp-group-head .xp-caret::after{width:1px;height:12px;transform:translate(-50%,-50%);transition:opacity .25s ease}
+.xp-group[data-open="true"] .xp-caret::after{opacity:0}
+.xp-group-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.xp-group[data-open="true"] .xp-group-body{max-height:5000px}
 
 /* ─── CONTACT ─── */
 #contact{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;padding:6rem 2.5rem;border-bottom:1px solid var(--gd);position:relative;z-index:1;background:rgba(10,10,10,.55)}
@@ -196,7 +202,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
 </section>
 
 <section id="work">
-  <div class="sh"><span class="sn">02</span><h2>Projects</h2></div>
+  <div class="sh"><span class="sn">02</span><h2>Work</h2></div>
   <div class="grid">
 
     <a class="card" href="https://lossy.lampwrecked.art" target="_blank">
@@ -270,12 +276,12 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
   <div class="sh"><span class="sn">03</span><h2>About</h2></div>
   <div class="ag">
     <div>
-      <div class="als">
-        <span class="ar">Artist</span>
-        <span class="ar">Gallery Operations</span>
-      </div>
       <div class="an">Lamp</div>
       <div class="ap">they / them</div>
+    </div>
+    <div class="aright">
+      <p><strong>Lampwrecked</strong> is an artist based in New York. Faced with chronic illness and fading dexterity, their conceptual practice has expanded to experiments in many mediums. A background in psychology, art history, and neuroscience informs a practice rooted in sensory processing and biological experience.</p>
+      <p>By day, Lamp is Assistant Director of Gallery Operations at <a href="https://cycolgallery.com" target="_blank" style="color:var(--white);text-decoration:underline;text-decoration-color:var(--gm);text-underline-offset:3px">Cycol Gallery</a> in the Lower East Side.</p>
       <div class="pills">
         <span class="pill">Generative Collage</span>
         <span class="pill">Browser Synthesizers</span>
@@ -294,11 +300,8 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
         <span class="pill">Sculpture</span>
         <span class="pill">Installation</span>
         <span class="pill">Interactive Systems</span>
+        <span class="pill">Gallery Operations</span>
       </div>
-    </div>
-    <div class="aright">
-      <p><strong>Lampwrecked</strong> is an artist based in New York. Faced with chronic illness and fading dexterity, their conceptual practice has expanded to experiments in many mediums. A background in psychology, art history, and neuroscience informs a practice rooted in sensory processing and biological experience.</p>
-      <p>By day, Lamp is Assistant Director of Gallery Operations at <a href="https://cycolgallery.com" target="_blank" style="color:var(--white);text-decoration:underline;text-decoration-color:var(--gm);text-underline-offset:3px">Cycol Gallery</a> in the Lower East Side.</p>
     </div>
   </div>
 </section>
@@ -307,8 +310,9 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
   <div class="sh"><span class="sn">04</span><h2>Experience</h2></div>
   <div class="xp-list">
 
-    <div class="xp-group">
-      <div class="xp-group-head">Current &amp; Recent</div>
+    <div class="xp-group" data-open="true">
+      <button class="xp-group-head" type="button"><span>Current</span><span class="xp-count">2</span><span class="xp-caret"></span></button>
+      <div class="xp-group-body">
 
       <div class="xp">
         <span class="xp-date">Nov 2025 &mdash; Current</span>
@@ -321,6 +325,12 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
         <div class="xp-title">DAM Zine Collective</div>
         <span class="xp-venue">Collective</span>
       </div>
+      </div>
+    </div>
+
+    <div class="xp-group">
+      <button class="xp-group-head" type="button"><span>Recent</span><span class="xp-count">15</span><span class="xp-caret"></span></button>
+      <div class="xp-group-body">
 
       <div class="xp">
         <span class="xp-date">Apr 2026</span>
@@ -333,10 +343,6 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
         <div class="xp-title">Solana Graveyard Hackathon</div>
         <span class="xp-venue">Hackathon</span>
       </div>
-    </div>
-
-    <div class="xp-group">
-      <div class="xp-group-head">Exhibitions &amp; Talks</div>
 
       <div class="xp">
         <span class="xp-date">Feb 2026</span>
@@ -394,7 +400,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
 
       <div class="xp">
         <span class="xp-date">May 2025</span>
-        <div class="xp-title">One of seven selected grant winners &middot; Fubby14's Seeds Project</div>
+        <div class="xp-title"><em>Grant Recipient</em> &middot; Fubby14's Seeds Project</div>
         <span class="xp-venue">Grant</span>
       </div>
 
@@ -415,10 +421,12 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
         <div class="xp-title">Wetiko's Curation &amp; Silver Medal &middot; Guides Community Best in Show, LSP Art Show</div>
         <span class="xp-venue">Award</span>
       </div>
+      </div>
     </div>
 
     <div class="xp-group">
-      <div class="xp-group-head">Earlier Work &amp; Education</div>
+      <button class="xp-group-head" type="button"><span>Early</span><span class="xp-count">15</span><span class="xp-caret"></span></button>
+      <div class="xp-group-body">
 
       <div class="xp">
         <span class="xp-date">May 2023</span>
@@ -488,7 +496,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
 
       <div class="xp">
         <span class="xp-date">Dec 2012</span>
-        <div class="xp-title"><em>What is that though?</em> Art Show</div>
+        <div class="xp-title"><em>What Is That Though?</em> Group Art Show</div>
         <span class="xp-venue">Long Island, NY</span>
       </div>
 
@@ -500,7 +508,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
 
       <div class="xp">
         <span class="xp-date">Dec 2012</span>
-        <div class="xp-title"><em>See . me</em> Exhibition &middot; Miami Art Week</div>
+        <div class="xp-title"><em>See . me</em> Group Exhibition &middot; Miami Art Week</div>
         <span class="xp-venue">Miami, FL</span>
       </div>
 
@@ -508,6 +516,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
         <span class="xp-date">Nov 2012</span>
         <div class="xp-title">Curated + Produced <em>Look What I Found</em> Art Show</div>
         <span class="xp-venue">Brooklyn, NY</span>
+      </div>
       </div>
     </div>
 
@@ -524,12 +533,12 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
       <div><div class="cll">Email</div><div class="clv">hello@lampwrecked.art</div></div>
       <span class="ca">&#8599;</span>
     </a>
-    <a class="cl" href="https://instagram.com/lampwrecked" target="_blank">
-      <div><div class="cll">Instagram</div><div class="clv">@lampwrecked</div></div>
-      <span class="ca">&#8599;</span>
-    </a>
     <a class="cl" href="https://x.com/lampwrecked_" target="_blank">
       <div><div class="cll">X / Twitter</div><div class="clv">@lampwrecked_</div></div>
+      <span class="ca">&#8599;</span>
+    </a>
+    <a class="cl" href="https://instagram.com/lampwrecked" target="_blank">
+      <div><div class="cll">Instagram</div><div class="clv">@lampwrecked</div></div>
       <span class="ca">&#8599;</span>
     </a>
     <a class="cl" href="https://github.com/lampwrecked" target="_blank">
@@ -744,6 +753,17 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
   lastScroll = window.scrollY;
   scrollY = window.scrollY;
   tick();
+})();
+
+/* ─── Experience accordion ─── */
+(function(){
+  document.querySelectorAll('.xp-group-head').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.closest('.xp-group');
+      const open = group.getAttribute('data-open') === 'true';
+      group.setAttribute('data-open', open ? 'false' : 'true');
+    });
+  });
 })();
 
 /* ─── Mobile nav toggle ─── */
