@@ -2,786 +2,1482 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lampwrecked</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PIXELMARCH — Lampwrecked 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#0a0a0a;--white:#f4f4f0;--gl:#e0e0db;--gm:#888884;--gd:#2a2a28}
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
-a{color:inherit}
-
-/* ─── REACTIVE BG CANVAS ─── */
-#bgCanvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block}
-
-/* ─── NAV ─── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(10,10,10,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--gd);gap:2rem}
-.logo{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--white);text-decoration:none;flex-shrink:0;white-space:nowrap}
-.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;flex-wrap:nowrap}
-.nav-links a{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gm);text-decoration:none;transition:color .2s;white-space:nowrap}
-.nav-links a:hover{color:var(--white)}
-
-/* ─── MOBILE NAV TOGGLE ─── */
-.nav-toggle{display:none;background:none;border:1px solid var(--gd);color:var(--white);font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;padding:.5rem .8rem;flex-shrink:0;line-height:1}
-.nav-toggle[aria-expanded="true"]::after{content:'CLOSE'}
-.nav-toggle::after{content:'MENU'}
-
-/* ─── HERO ─── */
-.hero{padding-top:64px;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:5rem;padding-left:2.5rem;padding-right:2.5rem;border-bottom:1px solid var(--gd);position:relative;overflow:hidden}
-.hc{position:relative;z-index:2;max-width:900px}
-h1{font-size:clamp(3rem,8vw,7rem);font-weight:700;line-height:.95;letter-spacing:-.03em;margin-bottom:2rem}
-.status{margin-top:2rem;border-left:2px solid var(--white);padding-left:1.25rem;max-width:640px}
-.status-row{display:flex;align-items:center;gap:.75rem;font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gm);margin-bottom:.5rem}
-.status-row strong{color:var(--white);font-weight:700}
-.dot{width:8px;height:8px;background:var(--white);border-radius:50%;display:inline-block;animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
-.status-line{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--gl);letter-spacing:.05em;margin-top:.4rem}
-.status-line .k{color:var(--gm)}
-.ticker{margin-top:1.25rem;border-top:1px solid var(--gd);border-bottom:1px solid var(--gd);overflow:hidden;white-space:nowrap;width:100vw;margin-left:calc(-2.5rem - 1.25rem);padding:0;position:relative;background:rgba(10,10,10,.7)}
-.ticker-track{display:inline-block;animation:scroll 60s linear infinite;font-family:'Space Mono',monospace;font-size:.78rem;color:var(--gm);letter-spacing:.18em;text-transform:uppercase;padding:.85rem 0}
-.ticker-track span{margin:0 1.25rem}
-.ticker-track .acc{color:var(--gm)}
-@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* ─── SECTIONS ─── */
-section{padding:6rem 2.5rem;border-bottom:1px solid var(--gd);position:relative;z-index:1;background:rgba(10,10,10,.55)}
-.sh{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:4rem}
-.sn{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gm);letter-spacing:.15em}
-h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.02em}
-
-/* ─── PROJECT GRID ─── */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--gd)}
-.card{background:var(--black);position:relative;overflow:hidden;min-height:420px;text-decoration:none;color:inherit;display:block;isolation:isolate}
-.card-media{position:absolute;inset:0;z-index:0;overflow:hidden}
-.card-media video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease,filter .4s ease;filter:saturate(.85) contrast(1.05)}
-.card:hover .card-media video{transform:scale(1.04);filter:saturate(1) contrast(1.05)}
-.card-media::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.95) 0%,rgba(10,10,10,.85) 40%,rgba(10,10,10,.7) 70%,rgba(10,10,10,.55) 100%);z-index:1;pointer-events:none}
-.card-content{position:relative;z-index:2;padding:2.5rem;display:flex;flex-direction:column;gap:1.25rem;min-height:420px}
-.tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--white);border:1px solid rgba(244,244,240,.4);background:rgba(10,10,10,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:inline-block;padding:.25rem .65rem;width:fit-content}
-.cn{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--gl);position:absolute;top:1rem;right:1.5rem;letter-spacing:.1em;z-index:3;opacity:.7}
-.card h3{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-top:auto;color:var(--white);text-shadow:0 2px 12px rgba(0,0,0,.6)}
-.sub{font-size:.85rem;color:var(--gl);font-style:italic;text-shadow:0 1px 8px rgba(0,0,0,.6)}
-.desc{font-size:.92rem;color:var(--gl);line-height:1.7;max-width:420px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
-.cf{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(244,244,240,.2)}
-.yr{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gl);letter-spacing:.1em;opacity:.8}
-.arr{font-size:1rem;color:var(--white);transition:transform .2s;display:inline-block}
-.card:hover .arr{transform:translate(4px,-4px)}
-
-/* ─── ABOUT ─── */
-.ag{display:grid;grid-template-columns:1fr 1.6fr;gap:5rem;align-items:start}
-.an{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.03em;line-height:1}
-.ap{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gm);margin-top:.75rem}
-.aright p{font-size:1.05rem;color:var(--gl);line-height:1.8;margin-bottom:1.5rem}
-.aright p:last-child{margin-bottom:0}
-.pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--gd)}
-.pill{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .75rem;border:1px solid var(--gd);color:var(--gm)}
-
-/* ─── EXPERIENCE ─── */
-#experience{padding:6rem 2.5rem;border-bottom:1px solid var(--gd);position:relative;z-index:1;background:rgba(10,10,10,.55)}
-.xp-list{display:flex;flex-direction:column}
-.xp{display:grid;grid-template-columns:180px 1fr 140px;gap:2rem;padding:1.1rem 0;border-top:1px solid var(--gd);align-items:baseline;transition:padding-left .2s,background .2s}
-.xp:hover{padding-left:.75rem;background:rgba(244,244,240,.02)}
-.xp-group-body .xp:first-child{border-top:1px solid var(--gd)}
-.xp-group-body{padding-bottom:.5rem}
-.xp-date{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--gm);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-.xp-title{font-size:1rem;font-weight:500;color:var(--white);line-height:1.45}
-.xp-title em{font-style:italic;color:var(--gl);font-weight:400}
-.xp-venue{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--gm);letter-spacing:.08em;text-transform:uppercase;text-align:right}
-.xp-group{margin-top:1rem;border-top:1px solid var(--gd)}
-.xp-group:first-of-type{margin-top:0}
-.xp-group-head{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--white);letter-spacing:.18em;text-transform:uppercase;padding:1.25rem 0;display:flex;align-items:center;gap:1rem;cursor:pointer;background:none;border:none;width:100%;text-align:left;transition:color .2s}
-.xp-group-head:hover{color:var(--gl)}
-.xp-group-head .xp-count{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--gm);letter-spacing:.1em;margin-left:auto;padding-right:.5rem}
-.xp-group-head .xp-caret{display:inline-block;width:12px;height:12px;position:relative;flex-shrink:0;transition:transform .25s ease}
-.xp-group-head .xp-caret::before,.xp-group-head .xp-caret::after{content:'';position:absolute;background:var(--white);left:50%;top:50%}
-.xp-group-head .xp-caret::before{width:12px;height:1px;transform:translate(-50%,-50%)}
-.xp-group-head .xp-caret::after{width:1px;height:12px;transform:translate(-50%,-50%);transition:opacity .25s ease}
-.xp-group[data-open="true"] .xp-caret::after{opacity:0}
-.xp-group-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
-.xp-group[data-open="true"] .xp-group-body{max-height:5000px}
-
-/* ─── CONTACT ─── */
-#contact{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;padding:6rem 2.5rem;border-bottom:1px solid var(--gd);position:relative;z-index:1;background:rgba(10,10,10,.55)}
-.ch{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:700;letter-spacing:-.03em;line-height:1;margin-bottom:1.5rem}
-.cr{display:flex;flex-direction:column}
-.cl{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;border-bottom:1px solid var(--gd);text-decoration:none;color:var(--white);transition:padding-left .2s}
-.cl:first-child{border-top:1px solid var(--gd)}
-.cl:hover{padding-left:.75rem}
-.cll{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gm);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.15rem}
-.clv{font-size:1.05rem;font-weight:500}
-.ca{font-size:.9rem;color:var(--gm);transition:transform .2s,color .2s}
-.cl:hover .ca{transform:translate(4px,-4px);color:var(--white)}
-
-footer{padding:2rem 2.5rem;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;background:rgba(10,10,10,.7)}
-.fl{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gd);text-decoration:none}
-.fc{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--gd)}
-
-@media(max-width:768px){
-nav{padding:0 1.25rem}
-.nav-toggle{display:block}
-.nav-links{position:fixed;top:64px;left:0;right:0;background:rgba(10,10,10,.98);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--gd);flex-direction:column;gap:0;padding:0;transform:translateY(-110%);transition:transform .25s ease;pointer-events:none;visibility:hidden;align-items:stretch}
-.nav-links.open{transform:translateY(0);pointer-events:auto;visibility:visible}
-.nav-links li{border-bottom:1px solid var(--gd);width:100%;list-style:none}
-.nav-links li:last-child{border-bottom:none}
-.nav-links a{display:block;padding:1.25rem 1.5rem;font-size:.85rem;letter-spacing:.18em;width:100%}
-section{padding:4rem 1.25rem}.hero{padding-left:1.25rem;padding-right:1.25rem}
-.grid{grid-template-columns:1fr}.ag{grid-template-columns:1fr;gap:3rem}
-#contact{grid-template-columns:1fr;gap:3rem;padding:4rem 1.25rem}
-#experience{padding:4rem 1.25rem}
-.xp{grid-template-columns:1fr;gap:.3rem;padding:1.2rem 0}
-.xp-venue{text-align:left}
-.card{min-height:380px}.card-content{min-height:380px;padding:2rem}
-footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.25rem}
-.ticker{margin-left:-1.25rem}
-}
+  :root{--bg:#0a0a0a;--bg-elev:#131313;--bg-elev-2:#1a1a1a;--ink:#e8e8e8;--ink-dim:#888;--ink-faint:#444;--chartreuse:#d4ff00;--chartreuse-dim:#8aa300;--red:#ff2e2e;--blue:#4ab8ff;--green:#00d97e;--orange:#ff9500;--purple:#b15bff;--pink:#ff4eb8;--cyan:#00e0d4;--yellow:#ffd400;--rule:#2a2a2a;--rule-light:#1f1f1f;--panel-w:380px}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.4;overflow:hidden;height:100vh;width:100vw;overscroll-behavior:none}
+  body{display:flex;flex-direction:column}
+  #loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;overflow-y:auto}
+  #loader .title{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:.08em;color:var(--chartreuse);line-height:1;text-align:center}
+  @media (min-width:640px){#loader .title{font-size:64px}}
+  #loader .subtitle{font-family:'IBM Plex Mono',monospace;color:var(--ink-dim);font-size:10px;text-transform:uppercase;letter-spacing:.15em;text-align:center;max-width:480px;padding:0 16px}
+  #loader-grid{display:grid;grid-template-columns:repeat(10,14px);grid-template-rows:repeat(10,14px);gap:2px;padding:12px;border:1px solid var(--rule);background:var(--bg-elev)}
+  @media (min-width:640px){#loader-grid{grid-template-columns:repeat(10,16px);grid-template-rows:repeat(10,16px)}}
+  #loader-grid .cell{width:14px;height:14px;background:var(--bg-elev-2);border:1px solid var(--rule-light);transition:background .2s,border-color .2s}
+  @media (min-width:640px){#loader-grid .cell{width:16px;height:16px}}
+  #loader-grid .cell.loaded{background:var(--chartreuse);border-color:var(--chartreuse)}
+  #loader-grid .cell.loading{background:var(--chartreuse-dim);border-color:var(--chartreuse);animation:pulse .6s infinite alternate}
+  @keyframes pulse{from{opacity:.5}to{opacity:1}}
+  #loader-status{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-size:12px;letter-spacing:.05em;text-align:center}
+  #loader-status .count{color:var(--chartreuse);font-weight:700}
+  #loader-bar{width:360px;max-width:80vw;height:4px;background:var(--bg-elev);border:1px solid var(--rule);overflow:hidden}
+  #loader-bar>div{height:100%;background:var(--chartreuse);width:0%;transition:width .3s}
+  #loader .hint{font-family:'IBM Plex Mono',monospace;color:var(--ink-faint);font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-top:4px;text-align:center;padding:0 16px}
+  #loader-start{background:var(--chartreuse);color:var(--bg);border:none;padding:14px 32px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.1em;cursor:pointer;display:none;margin-top:8px}
+  #loader-start:active{background:#fff}
+  #mode-picker{width:100%;max-width:520px;background:var(--bg-elev);border:1px solid var(--rule)}
+  .mode-tabs{display:flex;border-bottom:1px solid var(--rule)}
+  .mode-tab{flex:1;background:transparent;border:none;border-right:1px solid var(--rule);color:var(--ink-dim);padding:10px 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:.08em;cursor:pointer}
+  .mode-tab:last-child{border-right:none}
+  .mode-tab.active{background:var(--bg-elev-2);color:var(--chartreuse);border-bottom:2px solid var(--chartreuse);margin-bottom:-1px}
+  .mode-tab:active{color:var(--chartreuse)}
+  .mode-panel{display:none;padding:14px 16px}
+  .mode-panel.active{display:block}
+  .mp-desc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.05em;line-height:1.5;margin-bottom:12px}
+  .mp-row{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+  .mp-row label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.18em}
+  .mp-row select,.mp-row input{background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:100%}
+  .mp-row select:focus,.mp-row input:focus{border-color:var(--chartreuse)}
+  #loader-begin{background:var(--chartreuse);color:var(--bg);border:none;padding:14px 32px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.1em;cursor:pointer;margin-top:4px}
+  #loader-begin:active{background:#fff}
+  #loader-begin:disabled{opacity:.4;cursor:not-allowed;background:var(--ink-faint)}
+  #loader-grid,#loader-status,#loader-bar{display:none}
+  #loader .hint{display:none}
+  #loader.loading #mode-picker,#loader.loading #loader-begin{display:none}
+  #loader.loading #loader-grid,#loader.loading #loader-status,#loader.loading #loader-bar,#loader.loading .hint{display:flex}
+  #loader-grid{display:none}
+  #loader.loading #loader-grid{display:grid}
+  #loader-status{display:none;justify-content:center}
+  #loader-bar{display:none}
+  header{background:var(--bg-elev);border-bottom:1px solid var(--rule);flex-shrink:0;transition:height .2s;z-index:100;position:relative}
+  header.collapsed{height:0;overflow:hidden;border-bottom:none}
+  .header-row{display:flex;align-items:stretch;min-height:56px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;padding:8px 14px;border-right:1px solid var(--rule);gap:10px}
+  .brand .logo{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--chartreuse);letter-spacing:.05em;line-height:1}
+  .brand .tag{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.18em;line-height:1.1}
+  .panel-collapse{background:transparent;border:1px solid var(--rule);color:var(--ink-dim);width:28px;height:28px;font-size:14px;cursor:pointer;margin-left:auto;align-self:center;margin-right:12px}
+  .panel-collapse:active{color:var(--chartreuse);border-color:var(--chartreuse)}
+  .panel-group{display:flex;align-items:center;gap:12px;padding:8px 14px;border-right:1px solid var(--rule);flex-wrap:wrap}
+  .control{display:flex;flex-direction:column;gap:3px}
+  .control label{font-family:'IBM Plex Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.15em;color:var(--ink-dim)}
+  .control select,.control input[type="number"]{background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;min-width:80px}
+  .control select:focus,.control input:focus{border-color:var(--chartreuse)}
+  .play-btn,.add-btn{background:transparent;border:1px solid var(--rule);color:var(--ink);padding:0 14px;height:38px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.1em;cursor:pointer;transition:all .15s;align-self:center}
+  .play-btn:active,.add-btn:active{border-color:var(--chartreuse);color:var(--chartreuse)}
+  .play-btn.playing{background:var(--chartreuse);color:var(--bg);border-color:var(--chartreuse)}
+  .add-btn:disabled{opacity:.3;cursor:not-allowed}
+  .status-bar{display:flex;align-items:center;padding:8px 14px;gap:12px;border-left:1px solid var(--rule);margin-left:auto}
+  .status-bar .stat{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.1em}
+  .status-bar .stat .v{color:var(--chartreuse);font-weight:700}
+  main{flex:1;display:grid;grid-template-columns:1fr var(--panel-w);overflow:hidden;min-height:0;position:relative}
+  main.panel-hidden{grid-template-columns:1fr 0}
+  main.panel-hidden aside{display:none!important}
+  @media (max-width:720px){
+    main{grid-template-columns:1fr;grid-template-rows:1fr auto}
+    main.panel-hidden{grid-template-rows:1fr 38px}
+    main.panel-hidden aside{display:flex!important;max-height:38px;overflow:hidden}
+    main.panel-hidden aside .panel-header{cursor:pointer}
+    aside{max-height:55vh;border-top:1px solid var(--rule);border-left:none!important}
+    #instruments{padding-bottom:80px}
+    .brand .tag{display:none}
+    .panel-group{padding:6px 12px;gap:8px}
+    .status-bar{display:none}
+    .control select,.control input{min-width:70px}
+    .brand .logo{font-size:18px}
+    .play-btn,.add-btn{height:34px;padding:0 12px;font-size:13px}
+  }
+  #grid-wrap{position:relative;background:var(--bg);overflow:hidden;border-right:1px solid var(--rule);touch-action:none}
+  @media (max-width:720px){#grid-wrap{border-right:none}}
+  #grid-canvas{display:block;width:100%;height:100%;image-rendering:pixelated;cursor:crosshair;touch-action:none}
+  #cell-info{position:absolute;top:12px;left:12px;background:rgba(10,10,10,.92);border:1px solid var(--rule);padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.08em;pointer-events:none;display:none;z-index:10}
+  #cell-info .id{color:var(--chartreuse);font-weight:700;font-size:13px;letter-spacing:.05em}
+  #zoom-ctrl{position:absolute;bottom:12px;right:12px;display:flex;flex-direction:column;gap:4px;z-index:20}
+  #zoom-ctrl button{width:38px;height:38px;background:rgba(10,10,10,.92);border:1px solid var(--rule);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:18px;cursor:pointer;font-weight:700}
+  #zoom-ctrl button:active{background:var(--chartreuse);color:var(--bg);border-color:var(--chartreuse)}
+  #zoom-level{background:rgba(10,10,10,.92);border:1px solid var(--rule);padding:4px 6px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-dim);text-align:center;letter-spacing:.08em}
+  #show-panel{position:absolute;bottom:12px;left:12px;background:var(--chartreuse);border:1px solid var(--chartreuse);color:var(--bg);padding:10px 16px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.1em;cursor:pointer;display:none;z-index:50;font-weight:700;box-shadow:0 2px 12px rgba(212,255,0,.3)}
+  main.panel-hidden #show-panel{display:block!important}
+  #show-header{position:absolute;top:12px;right:12px;background:var(--chartreuse);border:1px solid var(--chartreuse);color:var(--bg);padding:8px 12px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.1em;cursor:pointer;display:none;z-index:50;font-weight:700;box-shadow:0 2px 12px rgba(212,255,0,.3)}
+  body.header-collapsed #show-header{display:block!important}
+  aside{background:var(--bg-elev);overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column}
+  aside::-webkit-scrollbar{width:6px}
+  aside::-webkit-scrollbar-track{background:var(--bg)}
+  aside::-webkit-scrollbar-thumb{background:var(--rule)}
+  aside::-webkit-scrollbar-thumb:hover{background:var(--ink-faint)}
+  .panel-header{padding:10px 14px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg-elev);z-index:5}
+  .panel-header h2{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.1em;color:var(--chartreuse);font-weight:400}
+  .panel-header .count{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-dim);letter-spacing:.1em}
+  .panel-header .ph-actions{display:flex;gap:6px}
+  .panel-header .ph-btn{background:transparent;border:1px solid var(--rule);color:var(--ink-dim);width:26px;height:24px;cursor:pointer;font-size:14px;font-family:monospace}
+  .panel-header .ph-btn:active{color:var(--chartreuse);border-color:var(--chartreuse)}
+  .instrument{border-bottom:1px solid var(--rule);padding:12px 14px;position:relative}
+  .instrument.off{opacity:.45}
+  .instrument.collapsed .inst-body{display:none}
+  .instrument-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .swatch{width:14px;height:14px;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+  .instrument-name{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.06em;line-height:1;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pwr,.x-btn,.coll-btn,.loop-btn{background:transparent;border:1px solid var(--rule);color:var(--ink-dim);height:22px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;letter-spacing:.05em}
+  .loop-btn{padding:0 6px;letter-spacing:.08em}
+  .loop-btn.on{background:var(--chartreuse);color:var(--bg);border-color:var(--chartreuse)}
+  .pwr{width:32px}
+  .pwr.on{background:var(--chartreuse);color:var(--bg);border-color:var(--chartreuse)}
+  .x-btn{width:22px;font-family:'JetBrains Mono';font-size:11px}
+  .coll-btn{width:22px;font-size:10px}
+  .x-btn:active{color:var(--red);border-color:var(--red)}
+  .instrument-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+  .instrument-row.three{grid-template-columns:1fr 1fr 1fr}
+  .instrument select,.instrument input[type="number"]{background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:4px 6px;font-family:'JetBrains Mono',monospace;font-size:10px;outline:none;width:100%}
+  .instrument select:focus,.instrument input:focus{border-color:var(--chartreuse)}
+  .seq-strip{margin-top:6px;display:flex;gap:2px;align-items:center;height:30px}
+  .seq-strip .ncell{width:26px;height:26px;background:var(--bg);border:1px solid var(--rule);position:relative;flex-shrink:0}
+  .seq-strip .ncell.current{border-color:var(--chartreuse);box-shadow:0 0 8px rgba(212,255,0,.4)}
+  .seq-strip .ncell canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+  .step-bar{margin-top:8px;height:4px;background:var(--bg);border:1px solid var(--rule);position:relative}
+  .step-bar>div{position:absolute;top:0;left:0;height:100%;background:var(--chartreuse);width:0%;transition:width .06s linear}
+  .vol-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .vol-row label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.15em;width:26px}
+  .vol-row input[type="range"]{flex:1;height:4px;-webkit-appearance:none;appearance:none;background:var(--bg);border:1px solid var(--rule);outline:none}
+  .vol-row input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:12px;height:16px;background:var(--chartreuse);cursor:pointer}
+  .vol-row input[type="range"]::-moz-range-thumb{width:12px;height:16px;background:var(--chartreuse);cursor:pointer;border:none;border-radius:0}
+  .empty-state{padding:32px 20px;text-align:center;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+  optgroup{color:var(--chartreuse-dim);font-style:normal;font-weight:700;background:var(--bg-elev-2);font-size:9px;letter-spacing:.1em}
+  optgroup option{color:var(--ink);background:var(--bg);font-weight:400}
 </style>
 </head>
 <body>
+<div id="loader">
+  <div class="title">PIXELMARCH</div>
+  <div class="subtitle">A STEP SEQUENCER · LAMPWRECKED 2026 · POWERED BY THE NORMIES API</div>
 
-<canvas id="bgCanvas"></canvas>
-
-<nav>
-  <a class="logo" href="#top">Lampwrecked</a>
-  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"></button>
-  <ul class="nav-links" id="navMenu">
-    <li><a href="#work">Work</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#contact">Connect</a></li>
-  </ul>
-</nav>
-
-<section class="hero" id="top">
-  <div class="hc">
-    <h1>Lampwrecked</h1>
-    <div class="status">
-      <div class="status-row"><span class="dot"></span><span><strong>Experimentation Phase</strong> &nbsp;//&nbsp; Active</span></div>
-      <div class="status-line"><span class="k">&gt;</span> Medium preference loading<span class="k">...</span></div>
-      <div class="status-line"><span class="k">&gt;</span> Running<span class="k">:</span></div>
+  <div id="mode-picker">
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="all">ALL · 10,000</button>
+      <button class="mode-tab" data-mode="trait">BY TRAIT</button>
+      <button class="mode-tab" data-mode="wallet">BY WALLET</button>
     </div>
-    <div class="ticker">
-      <div class="ticker-track">
-        <span class="acc">GENERATIVE COLLAGE</span><span>&middot;</span>
-        <span>BROWSER SYNTHESIZERS</span><span>&middot;</span>
-        <span>CUSTOM MINTING PROCESSES</span><span>&middot;</span>
-        <span class="acc">STOP MOTION</span><span>&middot;</span>
-        <span>LASER ENGRAVING</span><span>&middot;</span>
-        <span>IGNITION</span><span>&middot;</span>
-        <span class="acc">VIDEO</span><span>&middot;</span>
-        <span>3D SCANNING</span><span>&middot;</span>
-        <span>DIGITAL SCULPTING</span><span>&middot;</span>
-        <span class="acc">PHOTOGRAPHY</span><span>&middot;</span>
-        <span>DIGITAL ILLUSTRATION</span><span>&middot;</span>
-        <span>ACRYLIC PAINTING</span><span>&middot;</span>
-        <span class="acc">DRAWING</span><span>&middot;</span>
-        <span>GEL PLATE PRINTING</span><span>&middot;</span>
-        <span>SCULPTURE</span><span>&middot;</span>
-        <span class="acc">INSTALLATION</span><span>&middot;</span>
-        <span>INTERACTIVE SYSTEMS</span><span>&middot;</span>
-        <span class="acc">GENERATIVE COLLAGE</span><span>&middot;</span>
-        <span>BROWSER SYNTHESIZERS</span><span>&middot;</span>
-        <span>CUSTOM MINTING PROCESSES</span><span>&middot;</span>
-        <span class="acc">STOP MOTION</span><span>&middot;</span>
-        <span>LASER ENGRAVING</span><span>&middot;</span>
-        <span>IGNITION</span><span>&middot;</span>
-        <span class="acc">VIDEO</span><span>&middot;</span>
-        <span>3D SCANNING</span><span>&middot;</span>
-        <span>DIGITAL SCULPTING</span><span>&middot;</span>
-        <span class="acc">PHOTOGRAPHY</span><span>&middot;</span>
-        <span>DIGITAL ILLUSTRATION</span><span>&middot;</span>
-        <span>ACRYLIC PAINTING</span><span>&middot;</span>
-        <span class="acc">DRAWING</span><span>&middot;</span>
-        <span>GEL PLATE PRINTING</span><span>&middot;</span>
-        <span>SCULPTURE</span><span>&middot;</span>
-        <span class="acc">INSTALLATION</span><span>&middot;</span>
-        <span>INTERACTIVE SYSTEMS</span><span>&middot;</span>
+
+    <div class="mode-panel active" data-mode="all">
+      <div class="mp-desc">Full 100×100 grid of every Normie. Seed region loads upfront; the rest stream in as instruments visit them.</div>
+    </div>
+
+    <div class="mode-panel" data-mode="trait">
+      <div class="mp-desc">Filter by trait. Scans the first 100 normies for matches — usually finds ~5-20 instantly. Enter the grid and more matches stream in as the background scan continues through all 10,000.</div>
+      <div class="mp-row">
+        <label>TRAIT CATEGORY</label>
+        <select id="trait-cat">
+          <option value="">— ANY —</option>
+          <option value="Type">TYPE</option>
+          <option value="Gender">GENDER</option>
+          <option value="Age">AGE</option>
+          <option value="Hair Style">HAIR STYLE</option>
+          <option value="Facial Feature">FACIAL FEATURE</option>
+          <option value="Eyes">EYES</option>
+          <option value="Expression">EXPRESSION</option>
+          <option value="Accessory">ACCESSORY</option>
+        </select>
+      </div>
+      <div class="mp-row">
+        <label>VALUE</label>
+        <select id="trait-val"><option value="">— SELECT CATEGORY —</option></select>
+      </div>
+    </div>
+
+    <div class="mode-panel" data-mode="wallet">
+      <div class="mp-desc">Show only normies owned by a wallet. Grid is sized to the holdings. ETH address or ENS.</div>
+      <div class="mp-row">
+        <label>ADDRESS</label>
+        <input type="text" id="wallet-input" placeholder="0x… or name.eth" spellcheck="false">
+      </div>
+      <div class="mp-row" style="font-size:9px;color:var(--ink-faint);letter-spacing:.15em;text-transform:uppercase">
+        <span id="wallet-status">ENTER WALLET TO PREVIEW</span>
       </div>
     </div>
   </div>
-</section>
 
-<section id="work">
-  <div class="sh"><span class="sn">02</span><h2>Work</h2></div>
-  <div class="grid">
+  <button id="loader-begin">▶ LOAD GRID</button>
 
-    <a class="card" href="https://lossy.lampwrecked.art" target="_blank">
-      <div class="card-media">
-        <video autoplay muted loop playsinline preload="metadata" poster="media/lossy.jpg">
-          <source src="media/lossy.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="cn">001</span>
-      <div class="card-content">
-        <span class="tag">Signal vs. Noise</span>
-        <h3>Lossy</h3>
-        <p class="sub">A departure from hand-based rendering systems</p>
-        <p class="desc">From photographs to laser etching, flame to video, and finally an interactive synthesizer &mdash; each transformation of the work communicates sensory realities of inhabiting a body with chronic illness.</p>
-        <div class="cf"><span class="yr">2025&ndash;2026</span><span class="arr">&#8599;</span></div>
-      </div>
-    </a>
-
-    <a class="card" href="https://publicfacingpreview.lampwrecked.art" target="_blank">
-      <div class="card-media">
-        <video autoplay muted loop playsinline preload="metadata" poster="media/publicfacing.jpg">
-          <source src="media/publicfacing.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="cn">002</span>
-      <div class="card-content">
-        <span class="tag">Art History Remix</span>
-        <h3>Public Facing</h3>
-        <p class="sub">Collages of artists who came before</p>
-        <p class="desc">Self-portraits from artists in the public domain were digitally hand cut into layers and recombined through a generative system. A long lineage of self-representation and art history torn apart and reassembled into new composites.</p>
-        <div class="cf"><span class="yr">2025&ndash;2026</span><span class="arr">&#8599;</span></div>
-      </div>
-    </a>
-
-    <a class="card" href="https://earthday.lampwrecked.art" target="_blank">
-      <div class="card-media">
-        <video autoplay muted loop playsinline preload="metadata" poster="media/synths.jpg">
-          <source src="media/synths.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="cn">003</span>
-      <div class="card-content">
-        <span class="tag">Sound Studies</span>
-        <h3>Synth Sketch Demos</h3>
-        <p class="sub">Browser instruments from natural systems</p>
-        <p class="desc">Interactive browser-based synthesizers based on natural systems &mdash; mycelial growth, neural meshes, live wind data, ripple physics. Each instrument is a small ecology of sound.</p>
-        <div class="cf"><span class="yr">2026</span><span class="arr">&#8599;</span></div>
-      </div>
-    </a>
-
-    <a class="card" href="https://splintercycle.lampwrecked.art" target="_blank">
-      <div class="card-media">
-        <video autoplay muted loop playsinline preload="metadata" poster="media/splinter.jpg">
-          <source src="media/splinter.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="cn">004</span>
-      <div class="card-content">
-        <span class="tag">Form Studies</span>
-        <h3>Splinter Cycle</h3>
-        <p class="sub">break, combine, scan, distort, combine</p>
-        <p class="desc">A broken glass sculpture scanned in 3D, manipulated as form, and projected back onto the original sculpture. The artifact and its data double held in superposition.</p>
-        <div class="cf"><span class="yr">2008&ndash;2026</span><span class="arr">&#8599;</span></div>
-      </div>
-    </a>
-
-  </div>
-</section>
-
-<section id="about">
-  <div class="sh"><span class="sn">03</span><h2>About</h2></div>
-  <div class="ag">
-    <div>
-      <div class="an">Lamp</div>
-      <div class="ap">they / them</div>
-    </div>
-    <div class="aright">
-      <p><strong>Lampwrecked</strong> is an artist based in New York. Faced with chronic illness and fading dexterity, their conceptual practice has expanded to experiments in many mediums. A background in psychology, art history, and neuroscience informs a practice rooted in sensory processing and biological experience.</p>
-      <p>By day, Lamp is Assistant Director of Gallery Operations at <a href="https://cycolgallery.com" target="_blank" style="color:var(--white);text-decoration:underline;text-decoration-color:var(--gm);text-underline-offset:3px">Cycol Gallery</a> in the Lower East Side.</p>
-      <div class="pills">
-        <span class="pill">Generative Collage</span>
-        <span class="pill">Browser Synthesizers</span>
-        <span class="pill">Custom Minting Processes</span>
-        <span class="pill">Stop Motion</span>
-        <span class="pill">Laser Engraving</span>
-        <span class="pill">Ignition</span>
-        <span class="pill">Video</span>
-        <span class="pill">3D Scanning</span>
-        <span class="pill">Digital Sculpting</span>
-        <span class="pill">Photography</span>
-        <span class="pill">Digital Illustration</span>
-        <span class="pill">Acrylic Painting</span>
-        <span class="pill">Drawing</span>
-        <span class="pill">Gel Plate Printing</span>
-        <span class="pill">Sculpture</span>
-        <span class="pill">Installation</span>
-        <span class="pill">Interactive Systems</span>
-        <span class="pill">Gallery Operations</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="experience">
-  <div class="sh"><span class="sn">04</span><h2>Experience</h2></div>
-  <div class="xp-list">
-
-    <div class="xp-group" data-open="true">
-      <button class="xp-group-head" type="button"><span>Current</span><span class="xp-count">2</span><span class="xp-caret"></span></button>
-      <div class="xp-group-body">
-
-      <div class="xp">
-        <span class="xp-date">Nov 2025 &mdash; Current</span>
-        <div class="xp-title"><em>Assistant Director, Gallery Operations</em> &middot; Cycol Gallery</div>
-        <span class="xp-venue">Manhattan, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Nov 2025 &mdash; Current</span>
-        <div class="xp-title">DAM Zine Collective</div>
-        <span class="xp-venue">Collective</span>
-      </div>
-      </div>
-    </div>
-
-    <div class="xp-group">
-      <button class="xp-group-head" type="button"><span>Recent</span><span class="xp-count">15</span><span class="xp-caret"></span></button>
-      <div class="xp-group-body">
-
-      <div class="xp">
-        <span class="xp-date">Apr 2026</span>
-        <div class="xp-title">0xMQQ Collection &middot; <em>Intern</em></div>
-        <span class="xp-venue">Internship</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Mar 2026</span>
-        <div class="xp-title">Solana Graveyard Hackathon</div>
-        <span class="xp-venue">Hackathon</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Feb 2026</span>
-        <div class="xp-title"><em>Speaker</em> &middot; NFT Paris Open Day at Artverse &mdash; "Digital Art: What Comes Next?" panel with John Karp, Dominique Moulon, Edouard, Grida</div>
-        <span class="xp-venue">Paris, France</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Dec 2026</span>
-        <div class="xp-title"><em>One Love</em> &middot; Group Showcase, Miami Art Week</div>
-        <span class="xp-venue">Miami, FL</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Nov 2025</span>
-        <div class="xp-title"><em>The Web3Connection</em> &middot; Group Exhibition, presented by The Simulacrum, funded by Superteam Canada</div>
-        <span class="xp-venue">Calgary, Canada</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Nov 2025</span>
-        <div class="xp-title"><em>Return To Form</em> &middot; Group Exhibition, Burrito DAO at Luma Studios</div>
-        <span class="xp-venue">Manhattan, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Oct 2025</span>
-        <div class="xp-title"><em>Night Visions</em>, <em>Lights on MOCA</em>, &amp; <em>Art On The Marquee</em> &middot; Three group exhibitions, MOCA Long Island Lights Festival</div>
-        <span class="xp-venue">Patchogue, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Aug 2025</span>
-        <div class="xp-title"><em>Featured Live Painter</em> &middot; Patchogue Arts Council's Alive After 5 Festival</div>
-        <span class="xp-venue">Patchogue, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Jul 2025</span>
-        <div class="xp-title">Decentralized Futures Digital Hackathon</div>
-        <span class="xp-venue">Hackathon</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Jul 2025</span>
-        <div class="xp-title"><em>Guides Community Artist Showcase</em> &middot; Featured on Mallow.art</div>
-        <span class="xp-venue">Online</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Jul 2025</span>
-        <div class="xp-title"><em>Interview</em> &middot; Drawn to the Mic with Dogame, ExchangeArt</div>
-        <span class="xp-venue">Interview</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">May 2025</span>
-        <div class="xp-title"><em>Grant Recipient</em> &middot; Fubby14's Seeds Project</div>
-        <span class="xp-venue">Grant</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Nov 2024</span>
-        <div class="xp-title">First Place &middot; LSP's Necromancy November Week #2 Art Prompt Contest</div>
-        <span class="xp-venue">Award</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Aug 2024</span>
-        <div class="xp-title"><em>Palestinian Relief Fund Fundraiser</em> &middot; Group Exhibition, Mallow.art</div>
-        <span class="xp-venue">Online</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Aug 2024</span>
-        <div class="xp-title">Wetiko's Curation &amp; Silver Medal &middot; Guides Community Best in Show, LSP Art Show</div>
-        <span class="xp-venue">Award</span>
-      </div>
-      </div>
-    </div>
-
-    <div class="xp-group">
-      <button class="xp-group-head" type="button"><span>Early</span><span class="xp-count">15</span><span class="xp-caret"></span></button>
-      <div class="xp-group-body">
-
-      <div class="xp">
-        <span class="xp-date">May 2023</span>
-        <div class="xp-title">UX + UI Bootcamp &middot; Springboard</div>
-        <span class="xp-venue">Certification</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Apr 2020</span>
-        <div class="xp-title"><em>The Gown Project</em> &middot; Designed, prototyped, fundraised and distributed 250 reusable water-resistant medical gowns to healthcare workers at three hospitals and a volunteer ambulance company</div>
-        <span class="xp-venue">New York, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Mar 2020</span>
-        <div class="xp-title"><em>000ze.Digital</em> &middot; Digital festival &amp; channel broadcasting live music performances during initial COVID lockdown</div>
-        <span class="xp-venue">Online</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Sep 2018</span>
-        <div class="xp-title">Touring Keyboardist &middot; Animal Show</div>
-        <span class="xp-venue">Tour</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Aug 2018</span>
-        <div class="xp-title">Directed <em>EST</em> Music Video &middot; Animal Show</div>
-        <span class="xp-venue">Music Video</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Oct 2017</span>
-        <div class="xp-title">Touring Keyboardist &middot; Sloppy Jane</div>
-        <span class="xp-venue">Tour</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Jun 2015</span>
-        <div class="xp-title">BS Psychology, BA Art History &middot; Minors in Neuroscience &amp; Cognitive Science &middot; Brooklyn College</div>
-        <span class="xp-venue">Brooklyn, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Jun 2014</span>
-        <div class="xp-title">Sculpture Art Installation &middot; Figment Art Festival, Governor's Island</div>
-        <span class="xp-venue">New York, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">May 2014</span>
-        <div class="xp-title">National Science Foundation Neuroscience REU Scholar Program</div>
-        <span class="xp-venue">Scholar</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Apr 2014</span>
-        <div class="xp-title">Interactive Performance Installation &middot; <em>The Body</em> at One of Us: The Chapel</div>
-        <span class="xp-venue">Brooklyn, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Oct 2013</span>
-        <div class="xp-title"><em>BAZINGA!</em> Art Show</div>
-        <span class="xp-venue">Harlem, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Dec 2012</span>
-        <div class="xp-title"><em>What Is That Though?</em> Group Art Show</div>
-        <span class="xp-venue">Long Island, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Dec 2012</span>
-        <div class="xp-title">Ouchi Gallery 100 Artists Exhibition</div>
-        <span class="xp-venue">Brooklyn, NY</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Dec 2012</span>
-        <div class="xp-title"><em>See . me</em> Group Exhibition &middot; Miami Art Week</div>
-        <span class="xp-venue">Miami, FL</span>
-      </div>
-
-      <div class="xp">
-        <span class="xp-date">Nov 2012</span>
-        <div class="xp-title">Curated + Produced <em>Look What I Found</em> Art Show</div>
-        <span class="xp-venue">Brooklyn, NY</span>
-      </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<div id="contact">
-  <div>
-    <div style="margin-bottom:1.5rem"><span style="font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gm);letter-spacing:.15em">05</span></div>
-    <h2 class="ch">Connect.</h2>
-  </div>
-  <div class="cr">
-    <a class="cl" href="mailto:hello@lampwrecked.art">
-      <div><div class="cll">Email</div><div class="clv">hello@lampwrecked.art</div></div>
-      <span class="ca">&#8599;</span>
-    </a>
-    <a class="cl" href="https://x.com/lampwrecked_" target="_blank">
-      <div><div class="cll">X / Twitter</div><div class="clv">@lampwrecked_</div></div>
-      <span class="ca">&#8599;</span>
-    </a>
-    <a class="cl" href="https://instagram.com/lampwrecked" target="_blank">
-      <div><div class="cll">Instagram</div><div class="clv">@lampwrecked</div></div>
-      <span class="ca">&#8599;</span>
-    </a>
-    <a class="cl" href="https://github.com/lampwrecked" target="_blank">
-      <div><div class="cll">GitHub</div><div class="clv">lampwrecked</div></div>
-      <span class="ca">&#8599;</span>
-    </a>
-  </div>
+  <div id="loader-grid"></div>
+  <div id="loader-status"><span class="count">—</span></div>
+  <div id="loader-bar"><div></div></div>
+  <div class="hint">LIVE NORMIES API · 60 RPM RATE LIMIT</div>
+  <button id="loader-start">▶ ENTER GRID</button>
 </div>
-
-<footer>
-  <a class="fl" href="#top">Lampwrecked</a>
-  <span class="fc">&copy; 2026</span>
-</footer>
-
+<header id="header">
+  <div class="header-row">
+    <div class="brand"><div><div class="logo">PIXELMARCH</div><div class="tag">LAMPWRECKED 2026 · NORMIES SEQUENCER</div></div></div>
+    <div class="panel-group">
+      <div class="control"><label>BPM</label><input type="number" id="bpm" value="120" min="40" max="240" step="1"></div>
+      <div class="control"><label>ROOT</label><select id="root"><option>C</option><option>C#</option><option>D</option><option>D#</option><option>E</option><option>F</option><option>F#</option><option>G</option><option>G#</option><option>A</option><option>A#</option><option>B</option></select></div>
+      <div class="control"><label>SCALE</label><select id="scale"><option value="major">MAJOR</option><option value="minor" selected>MINOR</option><option value="dorian">DORIAN</option><option value="phrygian">PHRYGIAN</option><option value="lydian">LYDIAN</option><option value="mixolydian">MIXO</option><option value="pentatonic">PENT</option><option value="minor_pent">MIN PENT</option><option value="blues">BLUES</option><option value="chromatic">CHROM</option><option value="whole">WHOLE</option></select></div>
+    </div>
+    <div class="panel-group">
+      <button class="play-btn" id="playbtn">▶ PLAY</button>
+      <button class="add-btn" id="addbtn">+ INSTRUMENT</button>
+    </div>
+    <div class="status-bar">
+      <div class="stat">CACHED <span class="v" id="stat-cached">0</span></div>
+      <div class="stat">QUEUE <span class="v" id="stat-queue">0</span></div>
+    </div>
+    <button class="panel-collapse" id="collapse-header">−</button>
+  </div>
+</header>
+<main id="main">
+  <div id="grid-wrap">
+    <canvas id="grid-canvas"></canvas>
+    <div id="cell-info"></div>
+    <button id="show-header">▼ MENU</button>
+    <button id="show-panel">▲ INSTRUMENTS</button>
+    <div id="zoom-ctrl">
+      <button id="zoom-in">+</button>
+      <div id="zoom-level">100%</div>
+      <button id="zoom-out">−</button>
+      <button id="zoom-reset" style="font-size:10px">FIT</button>
+    </div>
+  </div>
+  <aside id="panel">
+    <div class="panel-header">
+      <h2>INSTRUMENTS</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="count" id="inst-count">0 / 4</div>
+        <div class="ph-actions">
+          <button class="ph-btn" id="collapse-all">▤</button>
+          <button class="ph-btn" id="hide-panel">×</button>
+        </div>
+      </div>
+    </div>
+    <div id="instruments"><div class="empty-state">NO INSTRUMENTS · TAP +INSTRUMENT TO BEGIN</div></div>
+  </aside>
+</main>
 <script>
-/* ──────────────────────────────────────────────────────────
-   Reactive generative background.
-   - Particle field flowing through a curl-noise-style vector
-     field that drifts over time.
-   - Cursor disturbs the field (push/swirl).
-   - Scroll changes flow direction, particle speed, density of
-     connecting lines, and overall energy.
-   - Greyscale only, low opacity, sits behind everything.
-   ────────────────────────────────────────────────────────── */
-(function(){
-  const c = document.getElementById('bgCanvas');
-  const ctx = c.getContext('2d');
-  let W=0, H=0, dpr = Math.min(window.devicePixelRatio||1, 2);
-  let particles = [];
-  let mouse = {x:-9999, y:-9999, active:false};
-  let lastMove = 0;
+const API_BASE='https://api.normies.art';
+let GRID=100; // grid dimension N (NxN)
+let gridIds=null; // null = full 10000 (token id = y*GRID+x). Otherwise: token id at grid index i = gridIds[i].
+const PIXELS_PER_NORMIE=40,STEPS_PER_NORMIE=40,RATE_LIMIT=55;
+const pixelCache=new Map(),inflight=new Map(),fetchQueue=[];
+const fallbackEntries=new Set(); // token ids whose cache entry is a fallback, eligible for re-fetch
+let fetchInterval=(60/RATE_LIMIT)*1000,lastFetchTime=0;
 
-  // Scroll-tracked state (smoothed)
-  let scrollY = 0;
-  let scrollNorm = 0;          // 0 -> 1 over the page
-  let scrollVel = 0;           // px/frame (smoothed)
-  let lastScroll = 0;
-  let energy = 0;              // builds with scroll velocity, decays slowly
-  let time = 0;                // master clock for noise drift
+// Grid-coord ↔ flat grid-index. In subset modes, grid-index maps via gridIds[] to actual normie token id.
+const idxToXY=idx=>({x:idx%GRID,y:Math.floor(idx/GRID)});
+const xyToIdx=(x,y)=>y*GRID+x;
+function tokenIdAt(idx){
+  if(gridIds)return gridIds[idx];
+  return idx; // full mode: token id == grid index
+}
+function gridIdxOfToken(token){
+  if(gridIds)return gridIds.indexOf(token);
+  return token;
+}
+// Legacy aliases (preserve semantics for code that treats "id" as grid index)
+const idToXY=idxToXY;
+const xyToId=xyToIdx;
+// Cache is keyed by normie TOKEN id (real API id). Grid indices are translated via tokenIdAt().
+function pixelAtGridIdx(idx){
+  const tokenId=tokenIdAt(idx);
+  if(tokenId===undefined||tokenId===null)return null;
+  return pixelCache.get(tokenId);
+}
+function hasPixelAtGridIdx(idx){
+  const tokenId=tokenIdAt(idx);
+  if(tokenId===undefined||tokenId===null)return false;
+  return pixelCache.has(tokenId);
+}
+function queueLazyFetchByGridIdx(idx){
+  const tokenId=tokenIdAt(idx);
+  if(tokenId===undefined||tokenId===null)return;
+  queueLazyFetch(tokenId);
+}
 
-  function resize(){
-    W = window.innerWidth; H = window.innerHeight;
-    c.width = W * dpr; c.height = H * dpr;
-    c.style.width = W+'px'; c.style.height = H+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    initParticles();
+async function fetchNormiePixels(id){
+  if(pixelCache.has(id))return pixelCache.get(id);
+  if(inflight.has(id))return inflight.get(id);
+  const promise=(async()=>{
+    const now=performance.now();
+    const wait=lastFetchTime+fetchInterval-now;
+    if(wait>0)await new Promise(r=>setTimeout(r,wait));
+    lastFetchTime=performance.now();
+    try{
+      const res=await fetch(`${API_BASE}/normie/${id}/pixels`);
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const txt=(await res.text()).trim();
+      if(txt.length!==1600)throw new Error('bad length');
+      const bytes=new Uint8Array(1600);
+      for(let i=0;i<1600;i++)bytes[i]=txt.charCodeAt(i)===49?1:0;
+      pixelCache.set(id,bytes);
+      return bytes;
+    }catch(e){
+      // Leave cache empty on error so next request retries.
+      // Instruments will pause silently until a successful fetch.
+      return null;
+    }finally{
+      inflight.delete(id);
+      updateStats();
+    }
+  })();
+  inflight.set(id,promise);
+  return promise;
+}
+function fallbackPixels(id){
+  const bytes=new Uint8Array(1600);
+  let seed=id*2654435761>>>0;
+  for(let i=0;i<1600;i++){
+    seed=(seed*1664525+1013904223)>>>0;
+    bytes[i]=(seed&0xff)>180?1:0;
   }
+  return bytes;
+}
+async function backgroundFetcher(){
+  while(true){
+    if(fetchQueue.length===0){await new Promise(r=>setTimeout(r,200));continue}
+    const id=fetchQueue.shift();
+    if(!pixelCache.has(id) && !inflight.has(id))await fetchNormiePixels(id);
+    updateStats();
+  }
+}
+function queueLazyFetch(id){
+  if(pixelCache.has(id))return;
+  if(inflight.has(id))return;
+  if(fetchQueue.includes(id))return;
+  fetchQueue.push(id);
+}
+function queuePriorityFetch(id){
+  // Priority: for currently-playing cells. Goes to front of queue so it's fetched first.
+  if(pixelCache.has(id))return;
+  if(inflight.has(id))return;
+  const existingIdx=fetchQueue.indexOf(id);
+  if(existingIdx>=0)fetchQueue.splice(existingIdx,1);
+  fetchQueue.unshift(id);
+}
+function updateStats(){
+  document.getElementById('stat-cached').textContent=pixelCache.size;
+  document.getElementById('stat-queue').textContent=fetchQueue.length;
+}
 
-  function initParticles(){
-    // more particles than before — denser field
-    const density = Math.min(260, Math.floor((W*H)/9000));
-    particles = [];
-    for(let i=0;i<density;i++){
-      particles.push({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        vx: 0, vy: 0,
-        r: Math.random()*1.4 + 0.4,
-        baseGrey: 70 + Math.random()*90,   // 70-160 grey
-        phase: Math.random()*Math.PI*2,
-        life: Math.random()*200
+const SCALES={major:[0,2,4,5,7,9,11],minor:[0,2,3,5,7,8,10],dorian:[0,2,3,5,7,9,10],phrygian:[0,1,3,5,7,8,10],lydian:[0,2,4,6,7,9,11],mixolydian:[0,2,4,5,7,9,10],pentatonic:[0,2,4,7,9],minor_pent:[0,3,5,7,10],blues:[0,3,5,6,7,10],chromatic:[0,1,2,3,4,5,6,7,8,9,10,11],whole:[0,2,4,6,8,10]};
+const NOTE_NAMES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+function rowToFreq(row,rootIdx,scale,baseOctave){
+  const inv=39-row;
+  const scaleNotes=SCALES[scale];
+  const step=Math.floor(inv*scaleNotes.length/40);
+  const octaveOffset=Math.floor(step/scaleNotes.length);
+  const degree=step%scaleNotes.length;
+  const semis=scaleNotes[degree]+rootIdx+(baseOctave+octaveOffset)*12;
+  return 440*Math.pow(2,(semis-69)/12);
+}
+
+let audioCtx=null,masterBus=null,masterComp=null,masterGain=null;
+function initAudio(){
+  if(audioCtx)return;
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  masterBus=audioCtx.createGain();masterBus.gain.value=1.0;
+  masterComp=audioCtx.createDynamicsCompressor();
+  masterComp.threshold.value=-8;masterComp.knee.value=12;masterComp.ratio.value=3;
+  masterComp.attack.value=.003;masterComp.release.value=.12;
+  masterGain=audioCtx.createGain();masterGain.gain.value=.85;
+  masterBus.connect(masterComp);masterComp.connect(masterGain);masterGain.connect(audioCtx.destination);
+}
+
+function vOsc(type){return(freq,vel,dur,out,when,ctx)=>{const osc=ctx.createOscillator(),gn=ctx.createGain();osc.type=type==='saw'?'sawtooth':type;osc.frequency.value=freq;gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.18*vel,when+.005);gn.gain.exponentialRampToValueAtTime(.001,when+dur);osc.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+dur+.05);}}
+const vSine=vOsc('sine'),vSquare=vOsc('square'),vSaw=vOsc('saw'),vTriangle=vOsc('triangle');
+
+function vFM(freq,vel,dur,out,when,ctx){const car=ctx.createOscillator(),mod=ctx.createOscillator(),modGain=ctx.createGain(),gn=ctx.createGain();car.type='sine';mod.type='sine';car.frequency.value=freq;mod.frequency.value=freq*2.01;modGain.gain.value=freq*1.4*vel;mod.connect(modGain);modGain.connect(car.frequency);gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.15*vel,when+.008);gn.gain.exponentialRampToValueAtTime(.001,when+dur);car.connect(gn);gn.connect(out);car.start(when);mod.start(when);car.stop(when+dur+.05);mod.stop(when+dur+.05);}
+function vAM(freq,vel,dur,out,when,ctx){const car=ctx.createOscillator(),mod=ctx.createOscillator(),modGain=ctx.createGain(),carGain=ctx.createGain(),gn=ctx.createGain();car.type='sawtooth';mod.type='sine';car.frequency.value=freq;mod.frequency.value=freq*.5;modGain.gain.value=.5;carGain.gain.value=.5;mod.connect(modGain);modGain.connect(carGain.gain);car.connect(carGain);carGain.connect(gn);gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.14*vel,when+.006);gn.gain.exponentialRampToValueAtTime(.001,when+dur);gn.connect(out);car.start(when);mod.start(when);car.stop(when+dur+.05);mod.stop(when+dur+.05);}
+function vPluck(freq,vel,dur,out,when,ctx){const bs=Math.floor(ctx.sampleRate*Math.min(dur,1.5));const buf=ctx.createBuffer(1,bs,ctx.sampleRate);const data=buf.getChannelData(0);const period=Math.max(2,Math.floor(ctx.sampleRate/freq));const noise=new Float32Array(period);for(let i=0;i<period;i++)noise[i]=Math.random()*2-1;let prev=0;for(let i=0;i<bs;i++){const idx=i%period;const cur=noise[idx];const avg=(cur+prev)*.5*.996;noise[idx]=avg;data[i]=avg*Math.exp(-i/(ctx.sampleRate*.4));prev=cur;}const src=ctx.createBufferSource();src.buffer=buf;const gn=ctx.createGain();gn.gain.value=.3*vel;src.connect(gn);gn.connect(out);src.start(when);}
+function vNoise(freq,vel,dur,out,when,ctx){const bs=Math.floor(ctx.sampleRate*Math.min(dur,1.5));const buf=ctx.createBuffer(1,bs,ctx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<bs;i++)data[i]=Math.random()*2-1;const src=ctx.createBufferSource();src.buffer=buf;const filt=ctx.createBiquadFilter();filt.type='bandpass';filt.frequency.value=freq*2;filt.Q.value=6;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.35*vel,when+.003);gn.gain.exponentialRampToValueAtTime(.001,when+dur);src.connect(filt);filt.connect(gn);gn.connect(out);src.start(when);}
+function vOrgan(freq,vel,dur,out,when,ctx){const harm=[1,2,3],amps=[1,.5,.33];const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.15*vel,when+.01);gn.gain.linearRampToValueAtTime(.12*vel,when+dur*.5);gn.gain.exponentialRampToValueAtTime(.001,when+dur);gn.connect(out);harm.forEach((h,i)=>{const osc=ctx.createOscillator();const g2=ctx.createGain();osc.type='sine';osc.frequency.value=freq*h;g2.gain.value=amps[i];osc.connect(g2);g2.connect(gn);osc.start(when);osc.stop(when+dur+.05);});}
+function vBell(freq,vel,dur,out,when,ctx){const car=ctx.createOscillator(),mod=ctx.createOscillator(),modGain=ctx.createGain(),gn=ctx.createGain();car.type='sine';mod.type='sine';car.frequency.value=freq;mod.frequency.value=freq*3.5;modGain.gain.setValueAtTime(freq*8*vel,when);modGain.gain.exponentialRampToValueAtTime(freq*.5,when+.4);mod.connect(modGain);modGain.connect(car.frequency);gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.18*vel,when+.005);gn.gain.exponentialRampToValueAtTime(.001,when+1.2);car.connect(gn);gn.connect(out);car.start(when);mod.start(when);car.stop(when+1.3);mod.stop(when+1.3);}
+function vPad(freq,vel,dur,out,when,ctx){const offsets=[1,1.005,.995];const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=1800;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.14*vel,when+.15);gn.gain.setValueAtTime(.14*vel,when+dur*.7);gn.gain.exponentialRampToValueAtTime(.001,when+dur);filt.connect(gn);gn.connect(out);offsets.forEach(o=>{const osc=ctx.createOscillator();osc.type='sawtooth';osc.frequency.value=freq*o;osc.connect(filt);osc.start(when);osc.stop(when+dur+.1);});}
+</script>
+<script>
+// drum + bass + dance voices. drum freq param is a derived pitch index, not the played freq.
+function vKick808(freq,vel,dur,out,when,ctx){const baseHz=30+(freq%200)*.4;const osc=ctx.createOscillator(),gn=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(baseHz*4.5,when);osc.frequency.exponentialRampToValueAtTime(baseHz,when+.04);gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.85*vel,when+.002);gn.gain.exponentialRampToValueAtTime(.001,when+.4);osc.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+.45);}
+function vKick909(freq,vel,dur,out,when,ctx){const baseHz=45+(freq%200)*.3;const osc=ctx.createOscillator(),click=ctx.createOscillator(),gn=ctx.createGain(),clickGain=ctx.createGain();osc.type='sine';click.type='triangle';osc.frequency.setValueAtTime(baseHz*3,when);osc.frequency.exponentialRampToValueAtTime(baseHz,when+.025);click.frequency.value=2000;gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.7*vel,when+.001);gn.gain.exponentialRampToValueAtTime(.001,when+.2);clickGain.gain.setValueAtTime(.3*vel,when);clickGain.gain.exponentialRampToValueAtTime(.001,when+.015);osc.connect(gn);click.connect(clickGain);gn.connect(out);clickGain.connect(out);osc.start(when);osc.stop(when+.25);click.start(when);click.stop(when+.02);}
+function vSnare808(freq,vel,dur,out,when,ctx){const tonalFreq=180+(freq%200)*.4;const t1=ctx.createOscillator(),t2=ctx.createOscillator(),tGain=ctx.createGain();t1.type='triangle';t2.type='triangle';t1.frequency.value=tonalFreq;t2.frequency.value=tonalFreq*1.6;tGain.gain.setValueAtTime(.3*vel,when);tGain.gain.exponentialRampToValueAtTime(.001,when+.1);t1.connect(tGain);t2.connect(tGain);tGain.connect(out);t1.start(when);t2.start(when);t1.stop(when+.12);t2.stop(when+.12);const nb=ctx.createBuffer(1,ctx.sampleRate*.2,ctx.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const n=ctx.createBufferSource();n.buffer=nb;const nf=ctx.createBiquadFilter();nf.type='highpass';nf.frequency.value=1500;const ng=ctx.createGain();ng.gain.setValueAtTime(.55*vel,when);ng.gain.exponentialRampToValueAtTime(.001,when+.15);n.connect(nf);nf.connect(ng);ng.connect(out);n.start(when);}
+function vClap(freq,vel,dur,out,when,ctx){const nb=ctx.createBuffer(1,ctx.sampleRate*.15,ctx.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;[0,.012,.024,.04].forEach((off,idx)=>{const n=ctx.createBufferSource();n.buffer=nb;const filt=ctx.createBiquadFilter();filt.type='bandpass';filt.frequency.value=1500;filt.Q.value=1.5;const gn=ctx.createGain();const amp=idx===3?.5:.3;gn.gain.setValueAtTime(amp*vel,when+off);gn.gain.exponentialRampToValueAtTime(.001,when+off+(idx===3?.15:.02));n.connect(filt);filt.connect(gn);gn.connect(out);n.start(when+off);});}
+function vHatClosed(freq,vel,dur,out,when,ctx){const nb=ctx.createBuffer(1,ctx.sampleRate*.08,ctx.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const n=ctx.createBufferSource();n.buffer=nb;const filt=ctx.createBiquadFilter();filt.type='highpass';filt.frequency.value=7000+(freq%200)*10;const gn=ctx.createGain();gn.gain.setValueAtTime(.4*vel,when);gn.gain.exponentialRampToValueAtTime(.001,when+.04);n.connect(filt);filt.connect(gn);gn.connect(out);n.start(when);}
+function vHatOpen(freq,vel,dur,out,when,ctx){const nb=ctx.createBuffer(1,ctx.sampleRate*.4,ctx.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const n=ctx.createBufferSource();n.buffer=nb;const filt=ctx.createBiquadFilter();filt.type='highpass';filt.frequency.value=7000;const gn=ctx.createGain();gn.gain.setValueAtTime(.35*vel,when);gn.gain.exponentialRampToValueAtTime(.001,when+.3);n.connect(filt);filt.connect(gn);gn.connect(out);n.start(when);}
+function vTom(freq,vel,dur,out,when,ctx){const baseHz=80+(freq%300)*.5;const osc=ctx.createOscillator(),gn=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(baseHz*2,when);osc.frequency.exponentialRampToValueAtTime(baseHz,when+.08);gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.5*vel,when+.003);gn.gain.exponentialRampToValueAtTime(.001,when+.3);osc.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+.35);}
+function vRim(freq,vel,dur,out,when,ctx){const osc=ctx.createOscillator(),gn=ctx.createGain();osc.type='triangle';osc.frequency.value=1500+(freq%200);gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.35*vel,when+.001);gn.gain.exponentialRampToValueAtTime(.001,when+.04);osc.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+.05);}
+function vCowbell(freq,vel,dur,out,when,ctx){const o1=ctx.createOscillator(),o2=ctx.createOscillator(),gn=ctx.createGain();o1.type='square';o2.type='square';o1.frequency.value=800;o2.frequency.value=540;gn.gain.setValueAtTime(.3*vel,when);gn.gain.exponentialRampToValueAtTime(.001,when+.18);o1.connect(gn);o2.connect(gn);gn.connect(out);o1.start(when);o2.start(when);o1.stop(when+.2);o2.stop(when+.2);}
+function vSubBass(freq,vel,dur,out,when,ctx){const f=freq*.5;const osc=ctx.createOscillator(),gn=ctx.createGain();osc.type='sine';osc.frequency.value=f;gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.5*vel,when+.01);gn.gain.setValueAtTime(.5*vel,when+dur*.7);gn.gain.exponentialRampToValueAtTime(.001,when+dur);osc.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+dur+.05);}
+function vReese(freq,vel,dur,out,when,ctx){const f=freq*.5;const o1=ctx.createOscillator(),o2=ctx.createOscillator();o1.type='sawtooth';o2.type='sawtooth';o1.frequency.value=f;o2.frequency.value=f*1.011;const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=600+freq*.5;filt.Q.value=4;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.25*vel,when+.015);gn.gain.exponentialRampToValueAtTime(.001,when+dur);o1.connect(filt);o2.connect(filt);filt.connect(gn);gn.connect(out);o1.start(when);o2.start(when);o1.stop(when+dur+.05);o2.stop(when+dur+.05);}
+function vAcid303(freq,vel,dur,out,when,ctx){const osc=ctx.createOscillator();osc.type='sawtooth';osc.frequency.value=freq;const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.Q.value=18;filt.frequency.setValueAtTime(freq*8,when);filt.frequency.exponentialRampToValueAtTime(freq*1.5,when+dur*.8);const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.3*vel,when+.005);gn.gain.exponentialRampToValueAtTime(.001,when+dur);osc.connect(filt);filt.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+dur+.05);}
+function vHouseStab(freq,vel,dur,out,when,ctx){const offsets=[1,1.5,2];const gn=ctx.createGain();const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=3500;filt.Q.value=2;gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.22*vel,when+.003);gn.gain.exponentialRampToValueAtTime(.001,when+Math.min(dur,.3));filt.connect(gn);gn.connect(out);offsets.forEach(o=>{const osc=ctx.createOscillator();osc.type='sawtooth';osc.frequency.value=freq*o;osc.connect(filt);osc.start(when);osc.stop(when+.4);});}
+function vTrancePluck(freq,vel,dur,out,when,ctx){const osc=ctx.createOscillator();osc.type='sawtooth';osc.frequency.value=freq;const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.Q.value=8;filt.frequency.setValueAtTime(freq*12,when);filt.frequency.exponentialRampToValueAtTime(freq*2,when+.15);const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.28*vel,when+.003);gn.gain.exponentialRampToValueAtTime(.001,when+dur);osc.connect(filt);filt.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+dur+.05);}
+function vTechnoBlip(freq,vel,dur,out,when,ctx){const osc=ctx.createOscillator();osc.type='square';osc.frequency.value=freq*2;const filt=ctx.createBiquadFilter();filt.type='bandpass';filt.frequency.value=freq*3;filt.Q.value=8;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.2*vel,when+.002);gn.gain.exponentialRampToValueAtTime(.001,when+Math.min(dur,.12));osc.connect(filt);filt.connect(gn);gn.connect(out);osc.start(when);osc.stop(when+.15);}
+function vDnbBass(freq,vel,dur,out,when,ctx){const f=freq*.5;const o1=ctx.createOscillator(),o2=ctx.createOscillator();o1.type='sawtooth';o2.type='square';o1.frequency.value=f;o2.frequency.value=f*1.005;const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.setValueAtTime(400,when);filt.frequency.linearRampToValueAtTime(900,when+.05);filt.Q.value=6;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.32*vel,when+.008);gn.gain.exponentialRampToValueAtTime(.001,when+dur);o1.connect(filt);o2.connect(filt);filt.connect(gn);gn.connect(out);o1.start(when);o2.start(when);o1.stop(when+dur+.05);o2.stop(when+dur+.05);}
+function vDubWob(freq,vel,dur,out,when,ctx){const f=freq*.5;const osc=ctx.createOscillator();osc.type='sawtooth';osc.frequency.value=f;const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.Q.value=10;const lfo=ctx.createOscillator();lfo.type='sine';lfo.frequency.value=6;const lfoGain=ctx.createGain();lfoGain.gain.value=800;lfo.connect(lfoGain);lfoGain.connect(filt.frequency);filt.frequency.value=1000;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.28*vel,when+.01);gn.gain.exponentialRampToValueAtTime(.001,when+dur);osc.connect(filt);filt.connect(gn);gn.connect(out);osc.start(when);lfo.start(when);osc.stop(when+dur+.05);lfo.stop(when+dur+.05);}
+function vGarageChord(freq,vel,dur,out,when,ctx){const offsets=[1,1.189,1.498];const gn=ctx.createGain();const filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=2200;gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.18*vel,when+.015);gn.gain.exponentialRampToValueAtTime(.001,when+dur);filt.connect(gn);gn.connect(out);offsets.forEach(o=>{const osc=ctx.createOscillator();osc.type='triangle';osc.frequency.value=freq*o;osc.connect(filt);osc.start(when);osc.stop(when+dur+.05);});}
+function vHardcoreStab(freq,vel,dur,out,when,ctx){const offsets=[1,1.007,.993];const filt=ctx.createBiquadFilter();filt.type='highpass';filt.frequency.value=200;const gn=ctx.createGain();gn.gain.setValueAtTime(0,when);gn.gain.linearRampToValueAtTime(.25*vel,when+.004);gn.gain.exponentialRampToValueAtTime(.001,when+Math.min(dur,.2));filt.connect(gn);gn.connect(out);offsets.forEach(o=>{const osc=ctx.createOscillator();osc.type='sawtooth';osc.frequency.value=freq*o;osc.connect(filt);osc.start(when);osc.stop(when+.25);});}
+
+const VOICES={
+  sine:{fn:vSine,drum:false,group:'SYNTH'},square:{fn:vSquare,drum:false,group:'SYNTH'},
+  saw:{fn:vSaw,drum:false,group:'SYNTH'},triangle:{fn:vTriangle,drum:false,group:'SYNTH'},
+  fm:{fn:vFM,drum:false,group:'SYNTH'},am:{fn:vAM,drum:false,group:'SYNTH'},
+  pluck:{fn:vPluck,drum:false,group:'SYNTH'},noise:{fn:vNoise,drum:false,group:'SYNTH'},
+  organ:{fn:vOrgan,drum:false,group:'SYNTH'},bell:{fn:vBell,drum:false,group:'SYNTH'},
+  pad:{fn:vPad,drum:false,group:'SYNTH'},
+  sub_bass:{fn:vSubBass,drum:false,group:'BASS'},reese:{fn:vReese,drum:false,group:'BASS'},
+  acid_303:{fn:vAcid303,drum:false,group:'BASS'},dnb_bass:{fn:vDnbBass,drum:false,group:'BASS'},
+  dub_wob:{fn:vDubWob,drum:false,group:'BASS'},
+  house_stab:{fn:vHouseStab,drum:false,group:'DANCE'},
+  trance_pluck:{fn:vTrancePluck,drum:false,group:'DANCE'},
+  techno_blip:{fn:vTechnoBlip,drum:false,group:'DANCE'},
+  garage_chord:{fn:vGarageChord,drum:false,group:'DANCE'},
+  hardcore_stab:{fn:vHardcoreStab,drum:false,group:'DANCE'},
+  kick_808:{fn:vKick808,drum:true,group:'DRUMS'},kick_909:{fn:vKick909,drum:true,group:'DRUMS'},
+  snare_808:{fn:vSnare808,drum:true,group:'DRUMS'},clap:{fn:vClap,drum:true,group:'DRUMS'},
+  hat_closed:{fn:vHatClosed,drum:true,group:'DRUMS'},hat_open:{fn:vHatOpen,drum:true,group:'DRUMS'},
+  tom:{fn:vTom,drum:true,group:'DRUMS'},rim:{fn:vRim,drum:true,group:'DRUMS'},
+  cowbell:{fn:vCowbell,drum:true,group:'DRUMS'},
+};
+const VOICE_DISPLAY={sine:'SINE',square:'SQUARE',saw:'SAW',triangle:'TRIANGLE',fm:'FM',am:'AM',pluck:'PLUCK',noise:'NOISE',organ:'ORGAN',bell:'BELL',pad:'PAD',sub_bass:'SUB BASS',reese:'REESE',acid_303:'ACID 303',dnb_bass:'DNB BASS',dub_wob:'DUB WOB',house_stab:'HOUSE STAB',trance_pluck:'TRANCE PLUCK',techno_blip:'TECHNO BLIP',garage_chord:'GARAGE CHORD',hardcore_stab:'HARDCORE',kick_808:'KICK 808',kick_909:'KICK 909',snare_808:'SNARE',clap:'CLAP',hat_closed:'HAT CLOSED',hat_open:'HAT OPEN',tom:'TOM',rim:'RIM',cowbell:'COWBELL'};
+</script>
+<script>
+const SHAPES=[{id:'h_serp',name:'H. SERPENTINE',color:'red'},{id:'v_serp',name:'V. SERPENTINE',color:'orange'},{id:'diag',name:'DIAGONAL',color:'green'},{id:'zigzag',name:'ZIGZAG',color:'cyan'},{id:'square',name:'SQUARE WAVE',color:'blue'},{id:'saw',name:'SAWTOOTH',color:'purple'},{id:'spiral',name:'SPIRAL',color:'pink'},{id:'walk',name:'RANDOM WALK',color:'yellow'}];
+const COLOR_MAP={red:'#ff2e2e',orange:'#ff9500',green:'#00d97e',cyan:'#00e0d4',blue:'#4ab8ff',purple:'#b15bff',pink:'#ff4eb8',yellow:'#ffd400'};
+const DEFAULT_VOICES=['kick_808','house_stab','hat_closed','sub_bass','pluck','snare_808','acid_303','pad'];
+
+let nextInstId=1;
+const instruments=[];
+let playing=false,bpm=120,rootIdx=0,scale='minor';
+
+function makeInstrument(opts={}){
+  const colorKey=SHAPES.find(s=>s.id===(opts.shape||'h_serp')).color;
+  const max=gridIds?gridIds.length:GRID*GRID;
+  const defaultStart=Math.floor(Math.random()*max);
+  return{
+    id:nextInstId++,
+    name:opts.name||`INST_${String(nextInstId-1).padStart(2,'0')}`,
+    shape:opts.shape||'h_serp',
+    synth:opts.synth||'sine',
+    octave:opts.octave??3,
+    on:true,
+    volume:.75,
+    color:colorKey,
+    startId:opts.startId??defaultStart,
+    currentId:opts.startId??defaultStart,
+    history:[],
+    futureBuf:[],
+    step:0,
+    direction:1,
+    walkState:{dx:1,dy:0},
+    lastStepTime:0,
+    collapsed:false,
+    // Loop state: 'off' = roam freely, 'single' = stay on one normie, 'path' = cycle N normies
+    loopMode:'off',
+    loopLength:4,
+    loopPath:null,   // precomputed array of grid indices when mode='path'
+    loopPathIdx:0,   // current position within loopPath
+  };
+}
+function predictNext(inst,fromId,count=3){
+  // Loop modes have deterministic futures
+  if(inst.loopMode==='single'){
+    return Array(count).fill(fromId);
+  }
+  if(inst.loopMode==='path' && inst.loopPath && inst.loopPath.length>0){
+    // Find fromId in loopPath, then return next `count` positions
+    let idx=inst.loopPath.indexOf(fromId);
+    if(idx<0)idx=inst.loopPathIdx;
+    const out=[];
+    for(let i=1;i<=count;i++){
+      out.push(inst.loopPath[(idx+i)%inst.loopPath.length]);
+    }
+    return out;
+  }
+  const path=[];let id=fromId,dir=inst.direction,walk={...inst.walkState};
+  for(let i=0;i<count;i++){
+    const nxt=shapeNext(inst.shape,id,dir,walk);
+    id=nxt.id;dir=nxt.dir;if(nxt.walk)walk=nxt.walk;
+    path.push(id);
+  }
+  return path;
+}
+function shapeNext(shape,id,direction,walk){
+  const{x,y}=idToXY(id);
+  if(shape==='h_serp'){let nx=x+direction,ny=y,dir=direction;if(nx>=GRID){nx=GRID-1;ny=(y+1)%GRID;dir=-1;}else if(nx<0){nx=0;ny=(y+1)%GRID;dir=1;}return{id:xyToId(nx,ny),dir};}
+  if(shape==='v_serp'){let nx=x,ny=y+direction,dir=direction;if(ny>=GRID){ny=GRID-1;nx=(x+1)%GRID;dir=-1;}else if(ny<0){ny=0;nx=(x+1)%GRID;dir=1;}return{id:xyToId(nx,ny),dir};}
+  if(shape==='diag'){let nx=x+direction,ny=y+direction,dir=direction;if(nx>=GRID||ny>=GRID){nx=x-1;ny=y-1;dir=-1;}if(nx<0||ny<0){nx=Math.abs(nx);ny=Math.abs(ny);dir=1;}nx=Math.max(0,Math.min(GRID-1,nx));ny=Math.max(0,Math.min(GRID-1,ny));return{id:xyToId(nx,ny),dir};}
+  if(shape==='zigzag'){const phase=(walk&&walk.zphase)||0;let nx=x,ny=y,dir=direction;if(phase===0)nx=x+direction;else ny=y+1;if(nx>=GRID){nx=GRID-1;dir=-1;ny=(y+1)%GRID;}if(nx<0){nx=0;dir=1;ny=(y+1)%GRID;}if(ny>=GRID)ny=0;return{id:xyToId(nx,ny),dir,walk:{...walk,zphase:(phase+1)%2}};}
+  if(shape==='square'){const phase=(walk&&walk.sphase)||0;let nx=x,ny=y,dir=direction;if(phase<4)nx=x+direction;else{ny=y+(Math.floor(phase/4)%2===0?-3:3);nx=x+direction;}if(nx>=GRID){dir=-1;nx=GRID-1;}if(nx<0){dir=1;nx=0;}ny=(ny+GRID)%GRID;return{id:xyToId(nx,ny),dir,walk:{...walk,sphase:(phase+1)%8}};}
+  if(shape==='saw'){const phase=(walk&&walk.sawphase)||0;let nx=x+direction,ny=y,dir=direction;if(phase<6)ny=y-1;else ny=y+6;if(nx>=GRID){dir=-1;nx=GRID-1;}if(nx<0){dir=1;nx=0;}ny=(ny+GRID)%GRID;return{id:xyToId(nx,ny),dir,walk:{...walk,sawphase:(phase+1)%7}};}
+  if(shape==='spiral'){const w=walk&&walk.dirX!==undefined?walk:{stepsInLeg:0,legLen:1,dirX:1,dirY:0,legCount:0};let nx=x+w.dirX,ny=y+w.dirY;let nw={...w};nw.stepsInLeg++;if(nw.stepsInLeg>=nw.legLen){nw.stepsInLeg=0;const[dx,dy]=[nw.dirX,nw.dirY];if(dx===1&&dy===0){nw.dirX=0;nw.dirY=1;}else if(dx===0&&dy===1){nw.dirX=-1;nw.dirY=0;}else if(dx===-1&&dy===0){nw.dirX=0;nw.dirY=-1;}else if(dx===0&&dy===-1){nw.dirX=1;nw.dirY=0;nw.legLen++;}nw.legCount++;if(nw.legCount%2===0)nw.legLen++;}nx=(nx+GRID)%GRID;ny=(ny+GRID)%GRID;return{id:xyToId(nx,ny),dir:direction,walk:nw};}
+  if(shape==='walk'){const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]];const cur=walk||{dx:1,dy:0};let pick=cur;if(Math.random()<.35){const p=dirs[Math.floor(Math.random()*dirs.length)];pick={dx:p[0],dy:p[1]};}let nx=x+pick.dx,ny=y+pick.dy;if(nx<0||nx>=GRID){pick={...pick,dx:-pick.dx};nx=x+pick.dx;}if(ny<0||ny>=GRID){pick={...pick,dy:-pick.dy};ny=y+pick.dy;}nx=Math.max(0,Math.min(GRID-1,nx));ny=Math.max(0,Math.min(GRID-1,ny));return{id:xyToId(nx,ny),dir:direction,walk:pick};}
+  return{id,dir:direction};
+}
+
+let schedulerTimer=null;
+const LOOKAHEAD=.12,TIMER_MS=25;
+function startSequencer(){if(playing)return;initAudio();if(audioCtx.state==='suspended')audioCtx.resume();playing=true;setPlayBtn(true);const now=audioCtx.currentTime+.05;instruments.forEach(i=>{i.lastStepTime=now;i.step=0;});scheduler();}
+function stopSequencer(){playing=false;if(schedulerTimer)clearTimeout(schedulerTimer);setPlayBtn(false);}
+function setPlayBtn(on){const m=document.getElementById('playbtn');if(on){m.textContent='■ STOP';m.classList.add('playing');}else{m.textContent='▶ PLAY';m.classList.remove('playing');}}
+
+function scheduler(){
+  if(!playing)return;
+  const ctx=audioCtx;
+  const stepDur=60/bpm/4;
+  const horizon=ctx.currentTime+LOOKAHEAD;
+  instruments.forEach(inst=>{
+    if(!inst.on)return;
+    // If pixels aren't cached yet, pause this instrument silently and prioritize the fetch.
+    // With a 4-instrument cap at the rate limit, this should be brief (well under a second).
+    if(!hasPixelAtGridIdx(inst.currentId)){
+      const tokenId=tokenIdAt(inst.currentId);
+      if(tokenId!==undefined && tokenId!==null)queuePriorityFetch(tokenId);
+      if(inst.lastStepTime<ctx.currentTime)inst.lastStepTime=ctx.currentTime;
+      return;
+    }
+    while(inst.lastStepTime<horizon){
+      scheduleStep(inst,inst.lastStepTime);
+      inst.lastStepTime+=stepDur;
+      advanceStep(inst);
+    }
+  });
+  schedulerTimer=setTimeout(scheduler,TIMER_MS);
+}
+function scheduleStep(inst,when){
+  const pixels=pixelAtGridIdx(inst.currentId);
+  if(!pixels)return;
+  const col=inst.step;
+  const voice=VOICES[inst.synth];
+  if(!voice)return;
+  const activeRows=[];
+  for(let row=0;row<PIXELS_PER_NORMIE;row++){if(pixels[row*PIXELS_PER_NORMIE+col])activeRows.push(row);}
+  if(activeRows.length===0)return;
+  const stepDur=60/bpm/4;
+  const dens=activeRows.length/PIXELS_PER_NORMIE;
+  const baseVel=inst.volume*(.45+.55*(1-dens));
+  if(voice.drum){
+    // lower row index = top of normie (high). higher row index = bottom (low).
+    // user wants lower rows = deeper drums. pick LOWEST row index in active set,
+    // BUT lower row INDEX = HIGHER position visually. so we want the highest row index (lowest position).
+    // For drum pitch: pass row directly. Larger row index → larger drumPitch param → deeper drum sound.
+    let drumRow=activeRows[activeRows.length-1]; // highest row index = bottom of image
+    // Map: row 0 (top) → small drumPitch (= high drum pitch)
+    //      row 39 (bottom) → large drumPitch (= low drum pitch)
+    const drumPitch=drumRow*8+30; // range ~30..342
+    // We want lower row = deeper. So invert: deeper drum when row index is large (bottom of normie).
+    // The drum voice functions use `freq%X` as input; we want big input → deep sound.
+    // For kick: `30 + (freq%200)*0.4` — larger freq → higher baseHz, not deeper. So invert sign.
+    // Use: (39 - drumRow)*8 + 30 for high-pitched drums when ROW is HIGH (low position),
+    // and small drumPitch when row is at top. That's backwards from user request.
+    // Cleanest: drumPitch = (39 - drumRow) * 8 + 30 means top row = ~342, bottom row = ~30.
+    // We pass this to e.g. vKick808: `baseHz = 30 + (freq%200)*0.4`. With freq=342, baseHz=~107. With freq=30, baseHz=~42.
+    // So top row → 107Hz kick (higher pitched), bottom row → 42Hz kick (deeper). MATCHES the request.
+    const adj=(39-drumRow)*8+30;
+    const dur=stepDur*1.8;
+    const vel=Math.min(1,baseVel*(.7+.6*dens));
+    voice.fn(adj,vel,dur,masterBus,when,audioCtx);
+  }else{
+    let picks=activeRows.length<=3?activeRows:[activeRows[0],activeRows[Math.floor(activeRows.length/2)],activeRows[activeRows.length-1]];
+    picks.forEach(row=>{
+      const freq=rowToFreq(row,rootIdx,scale,inst.octave);
+      const dur=stepDur*(.5+dens*1.5);
+      voice.fn(freq,baseVel,dur,masterBus,when,audioCtx);
+    });
+  }
+}
+function advanceStep(inst){
+  inst.step++;
+  if(inst.step>=STEPS_PER_NORMIE){
+    inst.step=0;
+    // Loop modes intercept normal shape traversal
+    if(inst.loopMode==='single'){
+      // Stay on current normie indefinitely. history just shows current cell.
+      inst.history.unshift(inst.currentId);
+      if(inst.history.length>4)inst.history.length=4;
+      // currentId, direction, walkState unchanged
+      inst.futureBuf=Array(4).fill(inst.currentId);
+      return;
+    }
+    if(inst.loopMode==='path' && inst.loopPath && inst.loopPath.length>0){
+      // Step to next cell in the precomputed path, wrap at end
+      inst.loopPathIdx=(inst.loopPathIdx+1)%inst.loopPath.length;
+      inst.history.unshift(inst.currentId);
+      if(inst.history.length>4)inst.history.length=4;
+      inst.currentId=inst.loopPath[inst.loopPathIdx];
+      // Build a futureBuf showing the next 4 path positions
+      inst.futureBuf=[];
+      for(let i=1;i<=4;i++){
+        inst.futureBuf.push(inst.loopPath[(inst.loopPathIdx+i)%inst.loopPath.length]);
+      }
+      inst.futureBuf.forEach(id=>queueLazyFetchByGridIdx(id));
+      queueLazyFetchByGridIdx(inst.currentId);
+      return;
+    }
+    // Normal shape traversal
+    let next=shapeNext(inst.shape,inst.currentId,inst.direction,inst.walkState);
+    if(gridIds){
+      let safety=0;
+      while(next.id>=gridIds.length && safety<10){
+        next=shapeNext(inst.shape,next.id,next.dir,next.walk||inst.walkState);
+        safety++;
+      }
+      if(next.id>=gridIds.length){
+        next.id=next.id%gridIds.length;
+      }
+    }
+    inst.history.unshift(inst.currentId);
+    if(inst.history.length>4)inst.history.length=4;
+    inst.currentId=next.id;
+    inst.direction=next.dir;
+    if(next.walk)inst.walkState=next.walk;
+    inst.futureBuf=predictNext(inst,inst.currentId,4);
+    inst.futureBuf.forEach(id=>queueLazyFetchByGridIdx(id));
+    queueLazyFetchByGridIdx(inst.currentId);
+  }
+}
+
+// Compute a loop path of `length` cells starting from currentId, using the instrument's shape
+function buildLoopPath(inst){
+  const path=[inst.currentId];
+  let id=inst.currentId, dir=inst.direction, walk={...inst.walkState};
+  for(let i=1;i<inst.loopLength;i++){
+    let next=shapeNext(inst.shape,id,dir,walk);
+    if(gridIds){
+      let safety=0;
+      while(next.id>=gridIds.length && safety<10){
+        next=shapeNext(inst.shape,next.id,next.dir,next.walk||walk);
+        safety++;
+      }
+      if(next.id>=gridIds.length)next.id=next.id%gridIds.length;
+    }
+    id=next.id; dir=next.dir; if(next.walk)walk=next.walk;
+    path.push(id);
+  }
+  return path;
+}
+</script>
+<script>
+const canvas=document.getElementById('grid-canvas');
+const ctx2d=canvas.getContext('2d',{alpha:false});
+let dpr=window.devicePixelRatio||1;
+let baseCellSize=8,cellSize=8,zoom=1.0,panX=0,panY=0;
+function resizeCanvas(){
+  const wrap=document.getElementById('grid-wrap');
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  canvas.width=w*dpr;canvas.height=h*dpr;
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  ctx2d.setTransform(dpr,0,0,dpr,0,0);
+  const size=Math.min(w,h)-16;
+  baseCellSize=size/GRID;
+  applyZoom();
+}
+function applyZoom(){
+  cellSize=baseCellSize*zoom;
+  const wrap=document.getElementById('grid-wrap');
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  const gridW=cellSize*GRID,gridH=cellSize*GRID;
+  const maxPanX=Math.max(0,gridW-w+100);
+  const maxPanY=Math.max(0,gridH-h+100);
+  panX=Math.max(-100,Math.min(maxPanX,panX));
+  panY=Math.max(-100,Math.min(maxPanY,panY));
+  document.getElementById('zoom-level').textContent=Math.round(zoom*100)+'%';
+}
+function getOffsets(){
+  const wrap=document.getElementById('grid-wrap');
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  const gridW=cellSize*GRID,gridH=cellSize*GRID;
+  return{ox:(w-gridW)/2-panX,oy:(h-gridH)/2-panY};
+}
+function drawGrid(){
+  const wrap=document.getElementById('grid-wrap');
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  ctx2d.fillStyle='#0a0a0a';ctx2d.fillRect(0,0,w,h);
+  const{ox,oy}=getOffsets();
+  const vx0=Math.max(0,Math.floor(-ox/cellSize));
+  const vy0=Math.max(0,Math.floor(-oy/cellSize));
+  const vx1=Math.min(GRID-1,Math.ceil((w-ox)/cellSize));
+  const vy1=Math.min(GRID-1,Math.ceil((h-oy)/cellSize));
+  const PIXEL_VIEW=cellSize>=12;
+  // Build a map: cellId → instrument currently in this cell (for per-pixel highlighting)
+  const cellToInst=new Map();
+  instruments.forEach(inst=>{cellToInst.set(inst.currentId,inst);});
+  for(let y=vy0;y<=vy1;y++){
+    for(let x=vx0;x<=vx1;x++){
+      const id=xyToId(x,y);
+      const px=ox+x*cellSize,py=oy+y*cellSize;
+      const pixels=pixelAtGridIdx(id);
+      if(pixels){
+        if(PIXEL_VIEW){
+          ctx2d.fillStyle='#e3e5e4';
+          ctx2d.fillRect(px,py,cellSize,cellSize);
+          const pxsize=cellSize/40;
+          const inst=cellToInst.get(id);
+          if(inst){
+            // Per-pixel highlighting: active pixels in CURRENT column light up
+            // in instrument color, recent columns fade out with a decay trail.
+            const curCol=inst.step;
+            const col=COLOR_MAP[inst.color];
+            // Parse hex color once
+            const r=parseInt(col.slice(1,3),16);
+            const g=parseInt(col.slice(3,5),16);
+            const b=parseInt(col.slice(5,7),16);
+            for(let py2=0;py2<40;py2++){
+              for(let px2=0;px2<40;px2++){
+                if(!pixels[py2*40+px2])continue;
+                // Trail distance: how many columns behind playhead
+                let trailDist=curCol-px2;
+                if(trailDist<0)trailDist+=40; // wrap (column 39 vs cur 0 = 39 back, but recently we came from 0)
+                // We want columns AT or just BEFORE current to glow brightest.
+                // trailDist=0 → current column (brightest, color)
+                // trailDist 1..6 → fading trail
+                // trailDist > 6 → normal dark pixel
+                let fx=px+px2*pxsize, fy=py+py2*pxsize;
+                if(trailDist===0){
+                  // Current column: bright instrument color
+                  ctx2d.fillStyle=col;
+                }else if(trailDist<=6){
+                  // Trail: blend toward dark gray
+                  const t=1-(trailDist/7);
+                  const rr=Math.floor(0x48+(r-0x48)*t);
+                  const gg=Math.floor(0x49+(g-0x49)*t);
+                  const bb=Math.floor(0x4b+(b-0x4b)*t);
+                  ctx2d.fillStyle=`rgb(${rr},${gg},${bb})`;
+                }else{
+                  ctx2d.fillStyle='#48494b';
+                }
+                ctx2d.fillRect(fx,fy,pxsize+.5,pxsize+.5);
+              }
+            }
+          }else{
+            // No instrument here, render normally
+            ctx2d.fillStyle='#48494b';
+            for(let py2=0;py2<40;py2++){
+              for(let px2=0;px2<40;px2++){
+                if(pixels[py2*40+px2])ctx2d.fillRect(px+px2*pxsize,py+py2*pxsize,pxsize+.5,pxsize+.5);
+              }
+            }
+          }
+        }else{
+          let on=0;
+          for(let i=0;i<1600;i+=13)if(pixels[i])on++;
+          const density=on/123;
+          const lum=Math.floor(20+density*100);
+          ctx2d.fillStyle=`rgb(${lum},${lum},${lum})`;
+          ctx2d.fillRect(px,py,cellSize,cellSize);
+        }
+      }else{
+        // Not cached or empty grid cell (subset mode beyond filled)
+        if(gridIds && id>=gridIds.length){
+          ctx2d.fillStyle='#080808';
+        }else{
+          ctx2d.fillStyle='#131313';
+        }
+        ctx2d.fillRect(px,py,cellSize,cellSize);
+      }
+    }
+  }
+  if(cellSize>=4){
+    ctx2d.strokeStyle='rgba(212,255,0,.1)';
+    ctx2d.lineWidth=1;
+    for(let i=0;i<=GRID;i+=10){
+      const lx=ox+i*cellSize,ly=oy+i*cellSize;
+      ctx2d.beginPath();ctx2d.moveTo(lx+.5,oy);ctx2d.lineTo(lx+.5,oy+GRID*cellSize);ctx2d.stroke();
+      ctx2d.beginPath();ctx2d.moveTo(ox,ly+.5);ctx2d.lineTo(ox+GRID*cellSize,ly+.5);ctx2d.stroke();
+    }
+  }
+  ctx2d.strokeStyle='#2a2a2a';ctx2d.lineWidth=1;
+  ctx2d.strokeRect(ox-.5,oy-.5,GRID*cellSize+1,GRID*cellSize+1);
+  instruments.forEach(inst=>{
+    const col=COLOR_MAP[inst.color];
+    if(!PIXEL_VIEW){
+      // At low zoom, tint history/future cells so trails are visible
+      inst.history.forEach((hid,i)=>{
+        const{x,y}=idToXY(hid);
+        const px=ox+x*cellSize,py=oy+y*cellSize;
+        ctx2d.fillStyle=col;ctx2d.globalAlpha=.18-i*.035;
+        ctx2d.fillRect(px,py,cellSize,cellSize);
       });
+      inst.futureBuf.slice(0,5).forEach((fid,i)=>{
+        const{x,y}=idToXY(fid);
+        const px=ox+x*cellSize,py=oy+y*cellSize;
+        ctx2d.globalAlpha=.1-i*.018;ctx2d.fillStyle=col;
+        ctx2d.fillRect(px,py,cellSize,cellSize);
+      });
+      ctx2d.globalAlpha=1;
     }
-  }
-
-  // Cheap pseudo-noise field. Returns a unit-ish 2D vector (curl-like).
-  // Driven by time + scrollNorm so the field drifts AND reorganizes
-  // depending on where the user is on the page.
-  function field(x, y, t){
-    const s = 0.0028;
-    // two octaves of sin-based "noise"
-    const a = Math.sin(x*s + t*0.6) + Math.cos(y*s*1.3 - t*0.45);
-    const b = Math.cos(x*s*1.7 - t*0.5) + Math.sin(y*s - t*0.7);
-    // scroll bends the field's overall direction
-    const bend = scrollNorm * Math.PI * 2;
-    const ang = (a - b) * 0.9 + bend;
-    return { x: Math.cos(ang), y: Math.sin(ang) };
-  }
-
-  window.addEventListener('mousemove', e=>{
-    mouse.x = e.clientX; mouse.y = e.clientY;
-    mouse.active = true; lastMove = performance.now();
-  }, {passive:true});
-  window.addEventListener('touchmove', e=>{
-    if(e.touches.length){
-      mouse.x = e.touches[0].clientX;
-      mouse.y = e.touches[0].clientY;
-      mouse.active = true; lastMove = performance.now();
+    const{x,y}=idToXY(inst.currentId);
+    const px=ox+x*cellSize,py=oy+y*cellSize;
+    // Current cell outline
+    ctx2d.strokeStyle=col;ctx2d.lineWidth=2;
+    ctx2d.strokeRect(px-1,py-1,cellSize+2,cellSize+2);
+    ctx2d.shadowColor=col;ctx2d.shadowBlur=8;
+    ctx2d.strokeRect(px-1,py-1,cellSize+2,cellSize+2);
+    ctx2d.shadowBlur=0;
+    if(!PIXEL_VIEW && cellSize>=6){
+      // Step indicator line — only when we can't see per-pixel detail
+      const stepX=px+(inst.step/STEPS_PER_NORMIE)*cellSize;
+      ctx2d.fillStyle=col;
+      ctx2d.fillRect(stepX,py,Math.max(1,cellSize/8),cellSize);
     }
-  }, {passive:true});
-  window.addEventListener('mouseleave', ()=>{ mouse.active=false; });
+  });
+}
+let rafHandle=null;
+function renderLoop(){drawGrid();updateInstrumentStrips();rafHandle=requestAnimationFrame(renderLoop);}
 
-  window.addEventListener('scroll', ()=>{
-    const now = window.scrollY;
-    const dv = now - lastScroll;
-    // smoothed scroll velocity (signed)
-    scrollVel = scrollVel*0.7 + dv*0.3;
-    // pump energy from absolute velocity
-    energy = Math.min(1.4, energy + Math.abs(dv)*0.012);
-    lastScroll = now;
-    scrollY = now;
-    const docH = Math.max(1, document.body.scrollHeight - window.innerHeight);
-    scrollNorm = Math.min(1, Math.max(0, scrollY / docH));
-  }, {passive:true});
-
-  function tick(){
-    time += 0.008;
-    // decay energy each frame so it dies down when user stops scrolling
-    energy *= 0.96;
-    scrollVel *= 0.9;
-
-    // motion smear — slightly heavier fade gives a ghostly feel
-    const fadeAlpha = 0.14 + 0.08*(1 - Math.min(energy,1));
-    ctx.fillStyle = 'rgba(10,10,10,'+fadeAlpha+')';
-    ctx.fillRect(0,0,W,H);
-
-    // mouse influence fade after inactivity (gentler than before)
-    const sinceMove = performance.now() - lastMove;
-    const mInfluence = mouse.active ? Math.max(0, 1 - sinceMove/2000) : 0;
-
-    const repelRadius = 160;
-    const repelRadius2 = repelRadius*repelRadius;
-    // link distance grows with scroll energy → web tightens during motion
-    const linkDist = 110 + energy*70;
-    const linkDist2 = linkDist*linkDist;
-
-    // particle speed scales with energy + scroll velocity
-    const flowMag = 0.55 + energy*1.6;
-    const verticalBias = scrollVel * 0.025;
-
-    // ─── update + draw points
-    for(let i=0;i<particles.length;i++){
-      const p = particles[i];
-      p.life += 1;
-
-      // flow-field force
-      const f = field(p.x, p.y, time);
-      p.vx += f.x * flowMag * 0.08;
-      p.vy += (f.y * flowMag * 0.08) + verticalBias;
-
-      // mouse: gentle repel only (no swirl, no big halo)
-      if(mInfluence > 0){
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const d2 = dx*dx + dy*dy;
-        if(d2 < repelRadius2 && d2 > 0.01){
-          const d = Math.sqrt(d2);
-          const k = (1 - d/repelRadius) * mInfluence;
-          p.vx += (dx/d) * k * 0.7;
-          p.vy += (dy/d) * k * 0.7;
+const instPanel=document.getElementById('instruments');
+function voiceOptgroups(selected){
+  const groups={};
+  Object.entries(VOICES).forEach(([k,v])=>{groups[v.group]=groups[v.group]||[];groups[v.group].push(k);});
+  return Object.entries(groups).map(([g,keys])=>`<optgroup label="── ${g} ──">`+keys.map(k=>`<option value="${k}" ${k===selected?'selected':''}>${VOICE_DISPLAY[k]}</option>`).join('')+`</optgroup>`).join('');
+}
+function renderInstruments(){
+  instPanel.innerHTML='';
+  if(instruments.length===0){
+    instPanel.innerHTML='<div class="empty-state">NO INSTRUMENTS · TAP +INSTRUMENT TO BEGIN</div>';
+    document.getElementById('inst-count').textContent='0 / 4';
+    document.getElementById('addbtn').disabled=false;
+    return;
+  }
+  document.getElementById('inst-count').textContent=`${instruments.length} / 4`;
+  document.getElementById('addbtn').disabled=instruments.length>=4;
+  instruments.forEach(inst=>{
+    const div=document.createElement('div');
+    div.className='instrument'+(inst.on?'':' off')+(inst.collapsed?' collapsed':'');
+    div.dataset.id=inst.id;
+    const col=COLOR_MAP[inst.color];
+    div.innerHTML=`
+      <div class="instrument-head">
+        <div class="swatch" style="background:${col}"></div>
+        <div class="instrument-name">${VOICE_DISPLAY[inst.synth]||inst.synth} · #${tokenIdAt(inst.currentId)}</div>
+        <button class="pwr ${inst.on?'on':''}" data-act="pwr">${inst.on?'ON':'OFF'}</button>
+        <button class="coll-btn" data-act="coll">${inst.collapsed?'▾':'▴'}</button>
+        <button class="x-btn" data-act="del">×</button>
+      </div>
+      <div class="inst-body">
+        <div class="instrument-row">
+          <select data-prop="shape">${SHAPES.map(s=>`<option value="${s.id}" ${s.id===inst.shape?'selected':''}>${s.name}</option>`).join('')}</select>
+          <select data-prop="synth">${voiceOptgroups(inst.synth)}</select>
+        </div>
+        <div class="instrument-row three">
+          <select data-prop="startId"><option value="">START...</option><option value="random">RANDOM</option></select>
+          <input type="number" data-prop="octave" min="0" max="7" value="${inst.octave}" title="octave">
+          <div style="display:flex;align-items:center;font-family:'IBM Plex Mono';font-size:9px;color:var(--ink-dim);justify-content:center">${idToXY(inst.currentId).x},${idToXY(inst.currentId).y}</div>
+        </div>
+        <div class="instrument-row three">
+          <button class="loop-btn ${inst.loopMode!=='off'?'on':''}" data-act="loop">${inst.loopMode==='off'?'LOOP OFF':inst.loopMode==='single'?'LOOP 1':'LOOP '+inst.loopLength}</button>
+          <input type="number" data-prop="loopLength" min="2" max="32" value="${inst.loopLength}" title="loop length (only used in LOOP N mode)" ${inst.loopMode==='single'?'disabled':''}>
+          <input type="number" data-prop="goto" placeholder="GO TO #" min="0" max="9999" title="jump to normie token id">
+        </div>
+        <div class="seq-strip" data-strip>${renderStripHTML(inst)}</div>
+        <div class="step-bar"><div data-stepbar></div></div>
+        <div class="vol-row">
+          <label>VOL</label>
+          <input type="range" min="0" max="1" step="0.01" value="${inst.volume}" data-prop="volume">
+        </div>
+      </div>`;
+    instPanel.appendChild(div);
+    div.querySelector('[data-act="pwr"]').onclick=()=>{inst.on=!inst.on;renderInstruments();};
+    div.querySelector('[data-act="coll"]').onclick=()=>{inst.collapsed=!inst.collapsed;renderInstruments();};
+    div.querySelector('[data-act="del"]').onclick=()=>{const i=instruments.indexOf(inst);if(i>=0)instruments.splice(i,1);renderInstruments();};
+    div.querySelector('[data-act="loop"]').onclick=()=>{
+      // Cycle: off → single → path → off
+      if(inst.loopMode==='off'){inst.loopMode='single';inst.loopPath=null;}
+      else if(inst.loopMode==='single'){
+        inst.loopMode='path';
+        inst.loopPath=buildLoopPath(inst);
+        inst.loopPathIdx=0;
+      }
+      else{inst.loopMode='off';inst.loopPath=null;}
+      renderInstruments();
+    };
+    const shapeSel=div.querySelector('[data-prop="shape"]');
+    if(shapeSel)shapeSel.onchange=e=>{
+      inst.shape=e.target.value;
+      inst.color=SHAPES.find(s=>s.id===inst.shape).color;
+      inst.walkState={dx:1,dy:0};
+      inst.direction=1;
+      if(inst.loopMode==='path')inst.loopPath=buildLoopPath(inst);
+      renderInstruments();
+    };
+    const synthSel=div.querySelector('[data-prop="synth"]');
+    if(synthSel)synthSel.onchange=e=>{inst.synth=e.target.value;renderInstruments();};
+    const startSel=div.querySelector('[data-prop="startId"]');
+    if(startSel)startSel.onchange=e=>{
+      if(e.target.value==='random'){
+        const max=gridIds?gridIds.length:GRID*GRID;
+        inst.currentId=Math.floor(Math.random()*max);
+        inst.startId=inst.currentId;
+        inst.history=[];
+        inst.step=0;
+        if(inst.loopMode==='path')inst.loopPath=buildLoopPath(inst);
+        inst.loopPathIdx=0;
+        queueLazyFetchByGridIdx(inst.currentId);
+        renderInstruments();
+      }
+      e.target.value='';
+    };
+    const octInput=div.querySelector('[data-prop="octave"]');
+    if(octInput)octInput.onchange=e=>{inst.octave=Math.max(0,Math.min(7,parseInt(e.target.value)||3));};
+    const loopLenInput=div.querySelector('[data-prop="loopLength"]');
+    if(loopLenInput)loopLenInput.onchange=e=>{
+      inst.loopLength=Math.max(2,Math.min(32,parseInt(e.target.value)||4));
+      if(inst.loopMode==='path'){
+        inst.loopPath=buildLoopPath(inst);
+        inst.loopPathIdx=0;
+      }
+      renderInstruments();
+    };
+    const gotoInput=div.querySelector('[data-prop="goto"]');
+    if(gotoInput){
+      const doGoto=()=>{
+        const v=parseInt(gotoInput.value);
+        if(isNaN(v)||v<0||v>9999)return;
+        // Convert token id → grid index for this instrument
+        const newIdx=gridIdxOfToken(v);
+        // In subset mode (gridIds set), -1 means not in this grid.
+        // In full mode, gridIdxOfToken returns v directly so it's always >= 0.
+        if(newIdx<0){
+          gotoInput.value='';
+          gotoInput.placeholder='NOT IN GRID';
+          setTimeout(()=>{gotoInput.placeholder='GO TO #';},1500);
+          return;
+        }
+        inst.currentId=newIdx;
+        inst.startId=newIdx;
+        inst.history=[];
+        inst.step=0;
+        if(inst.loopMode==='path')inst.loopPath=buildLoopPath(inst);
+        inst.loopPathIdx=0;
+        queueLazyFetchByGridIdx(newIdx);
+        gotoInput.value='';
+        renderInstruments();
+      };
+      gotoInput.onchange=doGoto;
+      gotoInput.addEventListener('keydown',e=>{if(e.key==='Enter')doGoto();});
+    }
+    const volSlider=div.querySelector('[data-prop="volume"]');
+    if(volSlider)volSlider.oninput=e=>{inst.volume=parseFloat(e.target.value);};
+  });
+}
+function renderStripHTML(inst){
+  const past=inst.history.slice(0,3).reverse();
+  while(past.length<3)past.unshift(null);
+  const future=predictNext(inst,inst.currentId,3);
+  const cells=[];
+  past.forEach(id=>cells.push({id,current:false}));
+  cells.push({id:inst.currentId,current:true});
+  future.forEach(id=>cells.push({id,current:false}));
+  return cells.map(c=>`<div class="ncell ${c.current?'current':''}" data-cellid="${c.id??''}"><canvas width="40" height="40"></canvas></div>`).join('');
+}
+function updateInstrumentStrips(){
+  instruments.forEach(inst=>{
+    const div=instPanel.querySelector(`.instrument[data-id="${inst.id}"]`);
+    if(!div||inst.collapsed)return;
+    const bar=div.querySelector('[data-stepbar]');
+    if(bar)bar.style.width=`${(inst.step/STEPS_PER_NORMIE)*100}%`;
+    const strip=div.querySelector('[data-strip]');
+    if(strip){
+      const past=inst.history.slice(0,3).reverse();
+      while(past.length<3)past.unshift(null);
+      const future=predictNext(inst,inst.currentId,3);
+      const cells=[];
+      past.forEach(id=>cells.push({id,current:false}));
+      cells.push({id:inst.currentId,current:true});
+      future.forEach(id=>cells.push({id,current:false}));
+      const existingCells=strip.querySelectorAll('.ncell');
+      if(existingCells.length!==cells.length){strip.innerHTML=renderStripHTML(inst);}
+      else{
+        cells.forEach((c,i)=>{
+          const el=existingCells[i];
+          if(el.dataset.cellid!==String(c.id??'')){
+            el.dataset.cellid=c.id??'';
+            const cv=el.querySelector('canvas');
+            drawNormieToCanvas(c.id,cv);
+          }
+          el.classList.toggle('current',c.current);
+        });
+      }
+      const currentEl=strip.querySelector('.ncell.current canvas');
+      if(currentEl)drawNormieToCanvas(inst.currentId,currentEl,inst.step,COLOR_MAP[inst.color]);
+    }
+  });
+}
+function drawNormieToCanvas(id,canvas,playheadCol=-1,color=null){
+  if(id===null||id===undefined){const c=canvas.getContext('2d');c.fillStyle='#0a0a0a';c.fillRect(0,0,40,40);return;}
+  const c=canvas.getContext('2d');
+  c.fillStyle='#e3e5e4';c.fillRect(0,0,40,40);
+  const pixels=pixelAtGridIdx(id);
+  if(pixels){
+    if(playheadCol>=0 && color){
+      // Highlight current column pixels + fading trail
+      const r=parseInt(color.slice(1,3),16);
+      const g=parseInt(color.slice(3,5),16);
+      const b=parseInt(color.slice(5,7),16);
+      for(let y=0;y<40;y++){
+        for(let x=0;x<40;x++){
+          if(!pixels[y*40+x])continue;
+          let trail=playheadCol-x;
+          if(trail<0)trail+=40;
+          if(trail===0){
+            c.fillStyle=color;
+          }else if(trail<=6){
+            const t=1-(trail/7);
+            const rr=Math.floor(0x48+(r-0x48)*t);
+            const gg=Math.floor(0x49+(g-0x49)*t);
+            const bb=Math.floor(0x4b+(b-0x4b)*t);
+            c.fillStyle=`rgb(${rr},${gg},${bb})`;
+          }else{
+            c.fillStyle='#48494b';
+          }
+          c.fillRect(x,y,1,1);
         }
       }
-
-      // velocity clamp + friction
-      const sp = Math.hypot(p.vx, p.vy);
-      const maxSp = 2.4 + energy*2.5;
-      if(sp > maxSp){
-        p.vx = (p.vx/sp)*maxSp;
-        p.vy = (p.vy/sp)*maxSp;
-      }
-      p.vx *= 0.92; p.vy *= 0.92;
-
-      // integrate
-      p.x += p.vx; p.y += p.vy;
-
-      // wrap edges
-      if(p.x < -10) p.x = W+10;
-      if(p.x > W+10) p.x = -10;
-      if(p.y < -10) p.y = H+10;
-      if(p.y > H+10) p.y = -10;
-
-      // draw — tiny ghost points, pulsing subtly
-      const pulse = 0.55 + 0.45 * Math.sin(time*2.2 + p.phase);
-      const g = Math.min(220, p.baseGrey + energy*60);
-      const a = 0.35 + pulse*0.25;
-      ctx.fillStyle = 'rgba('+g+','+g+','+g+','+a+')';
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r*0.85 + energy*0.3, 0, Math.PI*2);
-      ctx.fill();
+    }else{
+      c.fillStyle='#48494b';
+      for(let y=0;y<40;y++)for(let x=0;x<40;x++)if(pixels[y*40+x])c.fillRect(x,y,1,1);
     }
-
-    // ─── connecting lines — the focal element
-    //   Skip pass thinned only when very idle; otherwise full graph
-    const step = energy > 0.2 ? 1 : 2;
-    for(let i=0;i<particles.length;i+=step){
-      const p = particles[i];
-      for(let j=i+1;j<particles.length;j+=step){
-        const q = particles[j];
-        const dx = p.x - q.x, dy = p.y - q.y;
-        const d2 = dx*dx + dy*dy;
-        if(d2 < linkDist2){
-          const closeness = 1 - d2/linkDist2;
-          // lines brighter than before — these define the look
-          const a = closeness * (0.22 + energy*0.22);
-          const g = 170 + Math.floor(energy*50);
-          ctx.strokeStyle = 'rgba('+g+','+g+','+g+','+a+')';
-          ctx.lineWidth = 0.45 + energy*0.35;
-          ctx.beginPath();
-          ctx.moveTo(p.x,p.y);
-          ctx.lineTo(q.x,q.y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    requestAnimationFrame(tick);
+  }else{
+    c.fillStyle='#888';c.font='8px monospace';c.fillText('?',16,24);
+    queueLazyFetchByGridIdx(id);
   }
+}
+</script>
+<script>
+document.getElementById('bpm').addEventListener('input',e=>{bpm=Math.max(40,Math.min(240,parseInt(e.target.value)||120));});
+document.getElementById('root').addEventListener('change',e=>{rootIdx=NOTE_NAMES.indexOf(e.target.value);});
+document.getElementById('scale').addEventListener('change',e=>{scale=e.target.value;});
+document.getElementById('playbtn').addEventListener('click',()=>{if(playing)stopSequencer();else startSequencer();});
+document.getElementById('addbtn').addEventListener('click',()=>{
+  if(instruments.length>=4)return;
+  const idx=instruments.length;
+  const shape=SHAPES[idx%SHAPES.length].id;
+  const synth=DEFAULT_VOICES[idx%DEFAULT_VOICES.length];
+  const max=gridIds?gridIds.length:GRID*GRID;
+  const startId=Math.floor(Math.random()*max);
+  const v=VOICES[synth];
+  let oct=3;
+  if(v.drum)oct=2;else if(v.group==='BASS')oct=2;
+  const inst=makeInstrument({shape,synth,startId,octave:oct});
+  inst.futureBuf=predictNext(inst,inst.currentId,4);
+  instruments.push(inst);
+  queueLazyFetchByGridIdx(inst.currentId);
+  inst.futureBuf.forEach(id=>queueLazyFetchByGridIdx(id));
+  renderInstruments();
+});
+document.getElementById('hide-panel').addEventListener('click',(e)=>{
+  e.stopPropagation();
+  document.getElementById('main').classList.add('panel-hidden');
+  setTimeout(resizeCanvas,250);
+});
+// Tap the panel header itself to re-expand when collapsed
+document.querySelector('.panel-header').addEventListener('click',(e)=>{
+  const main=document.getElementById('main');
+  if(main.classList.contains('panel-hidden')){
+    main.classList.remove('panel-hidden');
+    setTimeout(resizeCanvas,250);
+  }
+});
+document.getElementById('show-panel').addEventListener('click',()=>{document.getElementById('main').classList.remove('panel-hidden');setTimeout(resizeCanvas,250);});
+document.getElementById('collapse-all').addEventListener('click',()=>{const any=instruments.some(i=>!i.collapsed);instruments.forEach(i=>i.collapsed=any);renderInstruments();});
+document.getElementById('collapse-header').addEventListener('click',()=>{document.getElementById('header').classList.add('collapsed');document.body.classList.add('header-collapsed');setTimeout(resizeCanvas,250);});
+document.getElementById('show-header').addEventListener('click',()=>{document.getElementById('header').classList.remove('collapsed');document.body.classList.remove('header-collapsed');setTimeout(resizeCanvas,250);});
+function zoomBy(factor){
+  const wrap=document.getElementById('grid-wrap');
+  zoomAtPoint(Math.max(.3,Math.min(8,zoom*factor)), wrap.clientWidth/2, wrap.clientHeight/2);
+}
+// Zoom so that the grid point currently under (screenX, screenY) stays under it.
+// screenX/screenY are relative to the grid-wrap element.
+function zoomAtPoint(newZoom, screenX, screenY){
+  const wrap=document.getElementById('grid-wrap');
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  const{ox,oy}=getOffsets();
+  // Grid coordinate (fractional) currently under the focal point
+  const gx=(screenX-ox)/cellSize;
+  const gy=(screenY-oy)/cellSize;
+  // Apply new zoom
+  zoom=Math.max(.3,Math.min(8,newZoom));
+  cellSize=baseCellSize*zoom;
+  // After zoom, the offset formula is: ox = (w - cellSize*GRID)/2 - panX
+  // We want: ox + gx*cellSize = screenX  →  solve for panX
+  // ox = screenX - gx*cellSize
+  // (w - cellSize*GRID)/2 - panX = screenX - gx*cellSize
+  // panX = (w - cellSize*GRID)/2 - (screenX - gx*cellSize)
+  panX=(w-cellSize*GRID)/2-(screenX-gx*cellSize);
+  panY=(h-cellSize*GRID)/2-(screenY-gy*cellSize);
+  applyZoom();
+}
+document.getElementById('zoom-in').addEventListener('click',()=>zoomBy(1.4));
+document.getElementById('zoom-out').addEventListener('click',()=>zoomBy(1/1.4));
+document.getElementById('zoom-reset').addEventListener('click',()=>{zoom=1.0;panX=0;panY=0;applyZoom();});
 
-  resize();
-  window.addEventListener('resize', resize);
-  // initialize scroll baseline
-  lastScroll = window.scrollY;
-  scrollY = window.scrollY;
-  tick();
-})();
+let dragging=false,dragStartX=0,dragStartY=0,dragPanX=0,dragPanY=0,dragMoved=false,tapStartX=0,tapStartY=0;
+let pinchStartDist=0,pinchStartZoom=1,pinchFocalX=0,pinchFocalY=0,pinchLastMidX=0,pinchLastMidY=0;
+function handlePointerStart(x,y){dragging=true;dragStartX=x;dragStartY=y;dragPanX=panX;dragPanY=panY;dragMoved=false;tapStartX=x;tapStartY=y;}
+function handlePointerMove(x,y){if(!dragging)return;const dx=x-dragStartX,dy=y-dragStartY;if(Math.abs(dx)>4||Math.abs(dy)>4)dragMoved=true;panX=dragPanX-dx;panY=dragPanY-dy;applyZoom();}
+function handlePointerEnd(x,y){
+  if(!dragging)return;
+  dragging=false;
+  if(!dragMoved){
+    const rect=canvas.getBoundingClientRect();
+    const cx=tapStartX-rect.left,cy=tapStartY-rect.top;
+    const{ox,oy}=getOffsets();
+    const gx=Math.floor((cx-ox)/cellSize),gy=Math.floor((cy-oy)/cellSize);
+    if(gx>=0&&gx<GRID&&gy>=0&&gy<GRID){
+      const id=xyToId(gx,gy);
+      // In subset mode, skip empty cells
+      if(gridIds && id>=gridIds.length)return;
+      if(instruments.length===0)document.getElementById('addbtn').click();
+      const last=instruments[instruments.length-1];
+      last.currentId=id;last.startId=id;last.history=[];last.step=0;
+      last.futureBuf=predictNext(last,id,4);
+      queueLazyFetchByGridIdx(id);
+      last.futureBuf.forEach(fid=>queueLazyFetchByGridIdx(fid));
+      renderInstruments();
+    }
+  }
+}
+canvas.addEventListener('mousedown',e=>handlePointerStart(e.clientX,e.clientY));
+canvas.addEventListener('mousemove',e=>{
+  if(dragging){handlePointerMove(e.clientX,e.clientY);}
+  else{
+    const rect=canvas.getBoundingClientRect();
+    const{ox,oy}=getOffsets();
+    const gx=Math.floor((e.clientX-rect.left-ox)/cellSize),gy=Math.floor((e.clientY-rect.top-oy)/cellSize);
+    const cellInfo=document.getElementById('cell-info');
+    if(gx<0||gx>=GRID||gy<0||gy>=GRID){cellInfo.style.display='none';return;}
+    const id=xyToId(gx,gy);
+    const tokenId=tokenIdAt(id);
+    if(tokenId===undefined||tokenId===null){cellInfo.style.display='none';return;}
+    cellInfo.style.display='block';
+    cellInfo.innerHTML=`<div class="id">NORMIE #${tokenId}</div>COORD ${gx},${gy} · ${hasPixelAtGridIdx(id)?'CACHED':'NOT LOADED'}`;
+  }
+});
+canvas.addEventListener('mouseup',e=>handlePointerEnd(e.clientX,e.clientY));
+canvas.addEventListener('mouseleave',()=>{document.getElementById('cell-info').style.display='none';if(dragging)dragging=false;});
+canvas.addEventListener('touchstart',e=>{
+  if(e.touches.length===2){
+    const rect=canvas.getBoundingClientRect();
+    const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
+    pinchStartDist=Math.sqrt(dx*dx+dy*dy);
+    pinchStartZoom=zoom;
+    // Focal point = midpoint of the two fingers, relative to canvas
+    pinchFocalX=(e.touches[0].clientX+e.touches[1].clientX)/2-rect.left;
+    pinchFocalY=(e.touches[0].clientY+e.touches[1].clientY)/2-rect.top;
+    pinchLastMidX=pinchFocalX;
+    pinchLastMidY=pinchFocalY;
+    dragging=false;
+  }else{const t=e.touches[0];handlePointerStart(t.clientX,t.clientY);}
+  e.preventDefault();
+},{passive:false});
+canvas.addEventListener('touchmove',e=>{
+  if(e.touches.length===2){
+    const rect=canvas.getBoundingClientRect();
+    const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    // Current midpoint (for two-finger panning while pinching)
+    const midX=(e.touches[0].clientX+e.touches[1].clientX)/2-rect.left;
+    const midY=(e.touches[0].clientY+e.touches[1].clientY)/2-rect.top;
+    if(pinchStartDist>0){
+      const targetZoom=Math.max(.3,Math.min(8,pinchStartZoom*(d/pinchStartDist)));
+      // Zoom around the current finger midpoint
+      zoomAtPoint(targetZoom, midX, midY);
+      // Also pan by how much the midpoint moved (lets you drag while pinching)
+      panX-=(midX-pinchLastMidX);
+      panY-=(midY-pinchLastMidY);
+      pinchLastMidX=midX;
+      pinchLastMidY=midY;
+      applyZoom();
+    }
+  }else if(e.touches.length===1){const t=e.touches[0];handlePointerMove(t.clientX,t.clientY);}
+  e.preventDefault();
+},{passive:false});
+canvas.addEventListener('touchend',e=>{
+  if(e.changedTouches.length>0&&!pinchStartDist){const t=e.changedTouches[0];handlePointerEnd(t.clientX,t.clientY);}
+  if(e.touches.length===0){pinchStartDist=0;dragging=false;}
+},{passive:false});
+canvas.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const rect=canvas.getBoundingClientRect();
+  const f=e.deltaY<0?1.15:1/1.15;
+  zoomAtPoint(Math.max(.3,Math.min(8,zoom*f)), e.clientX-rect.left, e.clientY-rect.top);
+},{passive:false});
+window.addEventListener('resize',resizeCanvas);
 
-/* ─── Experience accordion ─── */
-(function(){
-  document.querySelectorAll('.xp-group-head').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const group = btn.closest('.xp-group');
-      const open = group.getAttribute('data-open') === 'true';
-      group.setAttribute('data-open', open ? 'false' : 'true');
-    });
-  });
-})();
+// ============================================================================
+// MODE PICKER & LOADERS
+// ============================================================================
+const TRAIT_VALUES={
+  Type:['Human','Cat','Alien','Agent'],
+  Gender:['Male','Female','Non-Binary'],
+  Age:['Young','Middle-Aged','Old'],
+  'Hair Style':['Short Hair','Long Hair','Curly Hair','Straight Hair','Wavy Hair','Spiky Hair','Wild Hair','Messy Hair','Mohawk','Crazy Hair','Braided Hair','Bald','Ponytail','Pigtails','Afro','Buzz Cut','Frumpy Hair','Stringy Hair','Peak Spike','Half Shaved','Knitted Cap'],
+  'Facial Feature':['Full Beard','Mustache','Goatee','Chin Strap','Muttonchops','Shadow Beard','Luxurious Beard','Handlebars','Big Beard','Normal Beard','Clean Shaven','Freckles','Mole','Rosy Cheeks','Dimples','High Cheekbones','Spots'],
+  Eyes:['Classic Shades','Big Shades','Regular Shades','Small Shades','Horned Rim Glasses','Nerd Glasses','VR Headset','3D Glasses','Eye Mask','Eye Patch','Round Glasses','Square Glasses','Aviators','No Glasses'],
+  Expression:['Neutral','Slight Smile','Serious','Content','Peaceful','Confident','Friendly'],
+  Accessory:['Top Hat','Fedora','Cowboy Hat','Beanie','Cap','Cap Forward','Bandana','Headband','Do-Rag','Hoodie','Earring','Gold Chain','Silver Chain','Bow Tie','No Accessories']
+};
 
-/* ─── Mobile nav toggle ─── */
-(function(){
-  const btn = document.getElementById('navToggle');
-  const menu = document.getElementById('navMenu');
-  if(!btn || !menu) return;
-  btn.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+let selectedMode='all';
+
+document.querySelectorAll('.mode-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    selectedMode=tab.dataset.mode;
+    document.querySelectorAll('.mode-tab').forEach(t=>t.classList.toggle('active',t===tab));
+    document.querySelectorAll('.mode-panel').forEach(p=>p.classList.toggle('active',p.dataset.mode===selectedMode));
+    updateBeginBtn();
   });
-  menu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      menu.classList.remove('open');
-      btn.setAttribute('aria-expanded','false');
-    });
-  });
-})();
+});
+
+const traitCat=document.getElementById('trait-cat');
+const traitVal=document.getElementById('trait-val');
+traitCat.addEventListener('change',()=>{
+  const cat=traitCat.value;
+  traitVal.innerHTML='';
+  if(!cat){traitVal.innerHTML='<option value="">— SELECT CATEGORY —</option>';updateBeginBtn();return;}
+  traitVal.innerHTML='<option value="">— ANY —</option>'+(TRAIT_VALUES[cat]||[]).map(v=>`<option value="${v}">${v.toUpperCase()}</option>`).join('');
+  updateBeginBtn();
+});
+traitVal.addEventListener('change',updateBeginBtn);
+
+const walletInput=document.getElementById('wallet-input');
+const walletStatus=document.getElementById('wallet-status');
+let walletTokenIds=null;
+let walletDebounce=null;
+walletInput.addEventListener('input',()=>{
+  clearTimeout(walletDebounce);
+  walletTokenIds=null;
+  const v=walletInput.value.trim();
+  if(!v){walletStatus.textContent='ENTER WALLET TO PREVIEW';updateBeginBtn();return;}
+  if(!/^(0x[a-fA-F0-9]{40}|[a-zA-Z0-9-]+\.eth)$/.test(v)){walletStatus.textContent='INVALID ADDRESS FORMAT';updateBeginBtn();return;}
+  walletStatus.textContent='LOOKING UP HOLDINGS...';
+  walletDebounce=setTimeout(async()=>{
+    try{
+      const res=await fetch(`${API_BASE}/holders/${v}`);
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const data=await res.json();
+      const ids=(data.tokenIds||[]).map(x=>parseInt(x));
+      walletTokenIds=ids;
+      walletStatus.textContent=ids.length>0?`${ids.length} NORMIES FOUND`:`NO NORMIES OWNED BY THIS WALLET`;
+      updateBeginBtn();
+    }catch(e){
+      walletStatus.textContent='LOOKUP FAILED · CHECK ADDRESS';
+      updateBeginBtn();
+    }
+  },400);
+});
+
+function updateBeginBtn(){
+  const btn=document.getElementById('loader-begin');
+  if(selectedMode==='all'){btn.disabled=false;btn.textContent='▶ LOAD FULL GRID (100×100)';}
+  else if(selectedMode==='trait'){
+    if(!traitCat.value||!traitVal.value){btn.disabled=true;btn.textContent='▶ SELECT TRAIT TO BEGIN';}
+    else{btn.disabled=false;btn.textContent=`▶ FIND NORMIES WITH "${traitVal.value.toUpperCase()}"`;}
+  }
+  else if(selectedMode==='wallet'){
+    if(!walletTokenIds){btn.disabled=true;btn.textContent='▶ ENTER WALLET ADDRESS';}
+    else if(walletTokenIds.length===0){btn.disabled=true;btn.textContent='▶ NO NORMIES TO LOAD';}
+    else{btn.disabled=false;btn.textContent=`▶ LOAD ${walletTokenIds.length} NORMIES`;}
+  }
+}
+
+document.getElementById('loader-begin').addEventListener('click',async()=>{
+  document.getElementById('loader').classList.add('loading');
+  if(selectedMode==='all')await loadAll();
+  else if(selectedMode==='trait')await loadByTrait();
+  else if(selectedMode==='wallet')await loadByWallet();
+});
+
+function buildLoaderGrid(cols=10,rows=10){
+  const g=document.getElementById('loader-grid');
+  g.style.gridTemplateColumns=`repeat(${cols}, ${cols<=12?14:Math.max(6,Math.floor(160/cols))}px)`;
+  g.style.gridTemplateRows=`repeat(${rows}, ${rows<=12?14:Math.max(6,Math.floor(160/rows))}px)`;
+  const size=cols<=12?14:Math.max(6,Math.floor(160/cols));
+  g.innerHTML='';
+  for(let i=0;i<cols*rows;i++){
+    const c=document.createElement('div');c.className='cell';
+    c.style.width=size+'px';c.style.height=size+'px';
+    g.appendChild(c);
+  }
+}
+
+async function loadAll(){
+  GRID=100;
+  gridIds=null;
+  // Seed region: first 100 normies (top-left 10x10), token id == grid index
+  buildLoaderGrid(10,10);
+  const cells=document.querySelectorAll('#loader-grid .cell');
+  const status=document.getElementById('loader-status').querySelector('.count');
+  const bar=document.querySelector('#loader-bar > div');
+  status.textContent='LOADING SEED REGION 0 / 100';
+  const ids=[];
+  for(let y=0;y<10;y++)for(let x=0;x<10;x++)ids.push(y*100+x);
+  let loaded=0,idx=0;
+  const workers=[];
+  for(let w=0;w<8;w++){
+    workers.push((async()=>{
+      while(idx<ids.length){
+        const i=idx++;const tokenId=ids[i];
+        cells[i].classList.add('loading');
+        try{await fetchNormiePixels(tokenId);}catch{}
+        cells[i].classList.remove('loading');
+        cells[i].classList.add('loaded');
+        loaded++;
+        status.textContent=`LOADING SEED REGION ${loaded} / 100 · GRID 100×100 (10,000 NORMIES TOTAL)`;
+        bar.style.width=(loaded/100*100)+'%';
+      }
+    })());
+  }
+  await Promise.all(workers);
+  document.getElementById('loader-start').style.display='block';
+  document.querySelector('#loader .hint').textContent='SEED LOADED · REST OF 10,000 LAZY-FETCHES AS YOU PLAY';
+}
+
+async function loadByWallet(){
+  GRID=Math.ceil(Math.sqrt(walletTokenIds.length));
+  gridIds=walletTokenIds.slice();
+  const total=walletTokenIds.length;
+  const cols=Math.min(GRID,16);
+  const rows=Math.ceil(total/cols);
+  buildLoaderGrid(Math.min(cols,12),Math.min(rows,12));
+  const cells=document.querySelectorAll('#loader-grid .cell');
+  const status=document.getElementById('loader-status').querySelector('.count');
+  const bar=document.querySelector('#loader-bar > div');
+  status.textContent=`LOADING 0 / ${total} OWNED NORMIES`;
+  let loaded=0,idx=0;
+  const workers=[];
+  const cellCount=cells.length;
+  for(let w=0;w<8;w++){
+    workers.push((async()=>{
+      while(idx<walletTokenIds.length){
+        const i=idx++;const tokenId=walletTokenIds[i];
+        const cellEl=cells[Math.floor(i/walletTokenIds.length*cellCount)];
+        if(cellEl)cellEl.classList.add('loading');
+        try{await fetchNormiePixels(tokenId);}catch{}
+        if(cellEl){cellEl.classList.remove('loading');cellEl.classList.add('loaded');}
+        loaded++;
+        status.textContent=`LOADING ${loaded} / ${total} OWNED NORMIES · GRID ${GRID}×${GRID}`;
+        bar.style.width=(loaded/total*100)+'%';
+      }
+    })());
+  }
+  await Promise.all(workers);
+  document.getElementById('loader-start').style.display='block';
+  document.querySelector('#loader .hint').textContent=`ALL ${total} NORMIES LOADED · ENTER GRID`;
+}
+
+async function loadByTrait(){
+  GRID=10;
+  gridIds=[];
+  const wantedCat=traitCat.value;
+  const wantedVal=traitVal.value;
+  buildLoaderGrid(10,10);
+  const cells=document.querySelectorAll('#loader-grid .cell');
+  const status=document.getElementById('loader-status').querySelector('.count');
+  const bar=document.querySelector('#loader-bar > div');
+
+  // Phase 1: scan first 100 normies synchronously (about ~2 min at rate limit, faster if API permits parallelism)
+  const PHASE1_SIZE=100;
+  status.textContent=`SCANNING FIRST ${PHASE1_SIZE} · 0 MATCHES`;
+  let scanned=0;
+  let nextId=0;
+  const concurrency=8;
+  const phase1Workers=[];
+  for(let w=0;w<concurrency;w++){
+    phase1Workers.push((async()=>{
+      while(nextId<PHASE1_SIZE){
+        const id=nextId++;
+        if(cells[id])cells[id].classList.add('loading');
+        try{
+          const now=performance.now();
+          const wait=lastFetchTime+fetchInterval-now;
+          if(wait>0)await new Promise(r=>setTimeout(r,wait));
+          lastFetchTime=performance.now();
+          const res=await fetch(`${API_BASE}/normie/${id}/traits`);
+          if(res.ok){
+            const data=await res.json();
+            const match=(data.attributes||[]).find(a=>a.trait_type===wantedCat && a.value===wantedVal);
+            if(match){
+              gridIds.push(id);
+              const newGrid=Math.ceil(Math.sqrt(gridIds.length));
+              if(newGrid!==GRID)GRID=newGrid;
+              queueLazyFetch(id);
+              if(cells[id]){cells[id].classList.remove('loading');cells[id].classList.add('loaded');}
+            }else{
+              if(cells[id])cells[id].classList.remove('loading');
+            }
+          }else{
+            if(cells[id])cells[id].classList.remove('loading');
+          }
+        }catch(e){
+          if(cells[id])cells[id].classList.remove('loading');
+        }
+        scanned++;
+        status.textContent=`SCANNING FIRST ${PHASE1_SIZE} · ${scanned}/${PHASE1_SIZE} CHECKED · ${gridIds.length} MATCHES · GRID ${GRID}×${GRID}`;
+        bar.style.width=(scanned/PHASE1_SIZE*100)+'%';
+      }
+    })());
+  }
+  await Promise.all(phase1Workers);
+
+  // Phase 1 complete: show enter button regardless of match count
+  document.getElementById('loader-start').style.display='block';
+  if(gridIds.length===0){
+    document.querySelector('#loader .hint').textContent=`NO MATCHES IN FIRST ${PHASE1_SIZE} · TRY DIFFERENT TRAIT, OR ENTER ANYWAY TO KEEP SCANNING REMAINING 9,900`;
+  }else{
+    document.querySelector('#loader .hint').textContent=`${gridIds.length} MATCHES READY · ENTER NOW · GRID KEEPS GROWING AS REMAINING 9,900 ARE SCANNED IN BACKGROUND`;
+  }
+  status.textContent=`PHASE 1 COMPLETE · ${gridIds.length} MATCHES IN FIRST ${PHASE1_SIZE} · BACKGROUND SCAN AVAILABLE`;
+
+  // Phase 2: continue scanning 100..9999 in background, no blocking
+  // This will start automatically once user enters grid (we kick it off via window._continueTraitScan)
+  window._continueTraitScan=async function(){
+    let bgScanned=0;
+    const bgConcurrency=2; // gentle — share rate limit with pixel fetches during play
+    let bgNext=PHASE1_SIZE;
+    const bgWorkers=[];
+    for(let w=0;w<bgConcurrency;w++){
+      bgWorkers.push((async()=>{
+        while(bgNext<10000){
+          const id=bgNext++;
+          try{
+            const now=performance.now();
+            const wait=lastFetchTime+fetchInterval-now;
+            if(wait>0)await new Promise(r=>setTimeout(r,wait));
+            lastFetchTime=performance.now();
+            const res=await fetch(`${API_BASE}/normie/${id}/traits`);
+            if(res.ok){
+              const data=await res.json();
+              const match=(data.attributes||[]).find(a=>a.trait_type===wantedCat && a.value===wantedVal);
+              if(match){
+                gridIds.push(id);
+                const newGrid=Math.ceil(Math.sqrt(gridIds.length));
+                if(newGrid!==GRID){
+                  GRID=newGrid;
+                  resizeCanvas();
+                }
+                queueLazyFetch(id);
+              }
+            }
+          }catch(e){}
+          bgScanned++;
+        }
+      })());
+    }
+    await Promise.all(bgWorkers);
+  };
+}
+
+document.getElementById('loader-start').addEventListener('click',()=>{
+  document.getElementById('loader').style.display='none';
+  resizeCanvas();renderInstruments();
+  if(!rafHandle)renderLoop();
+  backgroundFetcher();
+  // If a trait-mode background scan is queued, start it now
+  if(typeof window._continueTraitScan==='function'){
+    window._continueTraitScan();
+    window._continueTraitScan=null;
+  }
+});
+
+updateBeginBtn();
 </script>
 </body>
 </html>
