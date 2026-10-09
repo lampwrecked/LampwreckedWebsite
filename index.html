@@ -66,7 +66,6 @@ h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.02em}
 .desc{font-size:.92rem;color:var(--gl);line-height:1.7;max-width:420px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 .cf{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(244,244,240,.2)}
 .yr{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--gl);letter-spacing:.1em;opacity:.8}
-.pse{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#ffcf4a;border:1px solid rgba(255,207,74,.55);background:rgba(10,10,10,.75);padding:.3rem .65rem;width:fit-content;line-height:1.5}
 .arr{font-size:1rem;color:var(--white);transition:transform .2s;display:inline-block}
 .card:hover .arr{transform:translate(4px,-4px)}
 
@@ -207,30 +206,13 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
   <div class="sh"><span class="sn">02</span><h2>Work</h2></div>
   <div class="grid">
 
-    <a class="card" href="https://fracture.lampwrecked.art" target="_blank">
-      <div class="card-media">
-        <video muted loop playsinline preload="metadata" poster="media/fracture.jpg" data-hoverplay>
-          <source src="media/fracture.mp4" type="video/mp4">
-        </video>
-      </div>
-      <span class="cn">001</span>
-      <div class="card-content">
-        <span class="pse">&#9888; Photosensitivity warning &middot; flashing light &amp; rapid color</span>
-        <span class="tag">Generative AV</span>
-        <h3>Fracture</h3>
-        <p class="sub">Every touch breaks something new</p>
-        <p class="desc">A generative, interactive audiovisual synthesizer. Every press fractures the black screen in a new glitch, and every fracture is its own instrument, layered into a loop at 174 BPM. A shared public library of fracture recipes lets visitors stack, remix, and sequence each other&rsquo;s breaks into songs, making the piece a collaborative song-building experience.</p>
-        <div class="cf"><span class="yr">2026</span><span class="arr">&#8599;</span></div>
-      </div>
-    </a>
-
     <a class="card" href="https://publicfacingpreview.lampwrecked.art" target="_blank">
       <div class="card-media">
         <video autoplay muted loop playsinline preload="metadata" poster="media/publicfacing.jpg">
           <source src="media/publicfacing.mp4" type="video/mp4">
         </video>
       </div>
-      <span class="cn">002</span>
+      <span class="cn">001</span>
       <div class="card-content">
         <span class="tag">Art History Remix</span>
         <h3>Public Facing</h3>
@@ -246,7 +228,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
           <source src="media/contrastexplorer.mp4" type="video/mp4">
         </video>
       </div>
-      <span class="cn">003</span>
+      <span class="cn">002</span>
       <div class="card-content">
         <span class="tag">Interval Studies</span>
         <h3>contrastexplorer</h3>
@@ -262,7 +244,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
           <source src="media/lossy.mp4" type="video/mp4">
         </video>
       </div>
-      <span class="cn">004</span>
+      <span class="cn">003</span>
       <div class="card-content">
         <span class="tag">Signal vs. Noise</span>
         <h3>Lossy</h3>
@@ -278,7 +260,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
           <source src="media/synths.mp4" type="video/mp4">
         </video>
       </div>
-      <span class="cn">005</span>
+      <span class="cn">004</span>
       <div class="card-content">
         <span class="tag">Sound Studies</span>
         <h3>Synth Sketch Demos</h3>
@@ -294,7 +276,7 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
           <source src="media/splinter.mp4" type="video/mp4">
         </video>
       </div>
-      <span class="cn">006</span>
+      <span class="cn">005</span>
       <div class="card-content">
         <span class="tag">Form Studies</span>
         <h3>Splinter Cycle</h3>
@@ -881,18 +863,6 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
       menu.classList.remove('open');
       btn.setAttribute('aria-expanded','false');
     });
-  });
-})();
-</script>
-<script>
-/* Hover-only preview for flashing work (data-hoverplay): never autoplays, respects reduced motion */
-(function(){
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll('video[data-hoverplay]').forEach(v=>{
-    if(reduce) return;
-    const card = v.closest('.card');
-    card.addEventListener('mouseenter',()=>{v.play().catch(()=>{});});
-    card.addEventListener('mouseleave',()=>{v.pause();});
   });
 })();
 </script>
