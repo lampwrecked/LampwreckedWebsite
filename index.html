@@ -86,7 +86,7 @@ h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.02em}
 .xp-filter:hover{color:var(--white);border-color:var(--gm)}
 .xp-filter.on{color:var(--black);background:var(--white);border-color:var(--white)}
 .xp[hidden],.xp-group[hidden]{display:none}
-@media (max-width:640px){.xp-filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-right:-1.25rem;padding-right:1.25rem}.xp-filters::-webkit-scrollbar{display:none}.xp-filter{flex:0 0 auto}}
+@media (max-width:640px){.xp-filters{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}.xp-filter{padding:.6rem .3rem;letter-spacing:.08em;text-align:center;white-space:nowrap}}
 .xp-list{display:flex;flex-direction:column}
 .xp{display:grid;grid-template-columns:180px 1fr 140px;gap:2rem;padding:1.1rem 0;border-top:1px solid var(--gd);align-items:baseline;transition:padding-left .2s,background .2s}
 .xp:hover{padding-left:.75rem;background:rgba(244,244,240,.02)}
