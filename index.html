@@ -81,6 +81,12 @@ h2{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.02em}
 
 /* ─── EXPERIENCE ─── */
 #experience{padding:6rem 2.5rem;border-bottom:1px solid var(--gd);position:relative;z-index:1;background:rgba(10,10,10,.55)}
+.xp-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+.xp-filter{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gm);background:none;border:1px solid var(--gd);padding:.55rem .9rem;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.xp-filter:hover{color:var(--white);border-color:var(--gm)}
+.xp-filter.on{color:var(--black);background:var(--white);border-color:var(--white)}
+.xp[hidden],.xp-group[hidden]{display:none}
+@media (max-width:640px){.xp-filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-right:-1.25rem;padding-right:1.25rem}.xp-filters::-webkit-scrollbar{display:none}.xp-filter{flex:0 0 auto}}
 .xp-list{display:flex;flex-direction:column}
 .xp{display:grid;grid-template-columns:180px 1fr 140px;gap:2rem;padding:1.1rem 0;border-top:1px solid var(--gd);align-items:baseline;transition:padding-left .2s,background .2s}
 .xp:hover{padding-left:.75rem;background:rgba(244,244,240,.02)}
@@ -336,43 +342,52 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
 
 <section id="experience">
   <div class="sh"><span class="sn">04</span><h2>Experience</h2></div>
+  <div class="xp-filters" role="group" aria-label="Filter experience">
+    <button type="button" class="xp-filter on" data-f="all" aria-pressed="true">All</button>
+    <button type="button" class="xp-filter" data-f="exhibitions" aria-pressed="false">Exhibitions</button>
+    <button type="button" class="xp-filter" data-f="awards" aria-pressed="false">Awards</button>
+    <button type="button" class="xp-filter" data-f="talks" aria-pressed="false">Talks &amp; Press</button>
+    <button type="button" class="xp-filter" data-f="curating" aria-pressed="false">Curating</button>
+    <button type="button" class="xp-filter" data-f="various" aria-pressed="false">Various</button>
+    <button type="button" class="xp-filter" data-f="education" aria-pressed="false">Education</button>
+  </div>
   <div class="xp-list">
 
     <div class="xp-group" data-open="true">
       <button class="xp-group-head" type="button"><span>Current / Upcoming</span><span class="xp-count">6</span><span class="xp-caret"></span></button>
       <div class="xp-group-body">
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Nov 2025 &mdash; Current</span>
         <div class="xp-title"><em>Assistant Director</em> &middot; Cycol Gallery</div>
         <span class="xp-venue">Manhattan, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Nov 2025 &mdash; Current</span>
         <div class="xp-title">DAM Zine Collective</div>
         <span class="xp-venue">Collective</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Oct 2026</span>
         <div class="xp-title"><em>Meshahara: Many Roots, One Ledger</em> &middot; <em>Oceanview</em>, Immersive Group Exhibition, REX KL, curated by Art:Tech &amp; Hersoid</div>
         <span class="xp-venue">Kuala Lumpur, Malaysia</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Oct 2026</span>
         <div class="xp-title"><em>Glitchtober Season III</em> &middot; Featured Artist, Oct 25 &ldquo;Fracture&rdquo; prompt</div>
         <span class="xp-venue">Online</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Oct 2026</span>
         <div class="xp-title"><em>Night Visions</em> &amp; <em>Lights on MOCA</em> &middot; Two group exhibitions, MOCA Long Island Lights Festival: <em>Antiquity to Innovation</em></div>
         <span class="xp-venue">Patchogue, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Oct 2026 &mdash; Dec 2026</span>
         <div class="xp-title"><em>Pulp Stiction: Collage as an Act of Resistance</em> &middot; Group Exhibition, Hopkins Hall Gallery</div>
         <span class="xp-venue">Columbus, OH</span>
@@ -384,133 +399,133 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
       <button class="xp-group-head" type="button"><span>Recent</span><span class="xp-count">22</span><span class="xp-caret"></span></button>
       <div class="xp-group-body">
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Sep 2026</span>
         <div class="xp-title"><em>The Canal Street Show</em> &middot; Group Exhibition during NFT NYC, Luma Studios</div>
         <span class="xp-venue">Manhattan, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="curating">
         <span class="xp-date">Sep 2026</span>
         <div class="xp-title"><em>Curator</em> &middot; ACTZ (Art Commissions on Tezos), September Saudade edition, with @spike_0124, @deltasauce, and @basseadx</div>
         <span class="xp-venue">Online</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="curating">
         <span class="xp-date">Jun 2026</span>
         <div class="xp-title"><em>Curator</em> &middot; ExchangeArt Artist Showcase, NFC Summit Lisbon</div>
         <span class="xp-venue">Lisbon, Portugal</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Jun 2026</span>
         <div class="xp-title"><em>Artist</em> &middot; "Muse" (collaboration with Shills), VEXA Exhibition by Shills, NFC Summit Lisbon</div>
         <span class="xp-venue">Lisbon, Portugal</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="talks">
         <span class="xp-date">Jun 2026</span>
         <div class="xp-title"><em>Speaker</em> &middot; "Gallery IRL: does digital art pay the rent?" panel with Joana Kawahara-Lino, Marlene Corbun, Sebastian Borget, and Edouard, NFC Summit Lisbon</div>
         <span class="xp-venue">Lisbon, Portugal</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">May 2026 &mdash; Jun 2026</span>
         <div class="xp-title"><em>Beautiful After Live</em> &middot; Large Works Auction, Patchogue Arts Council</div>
         <span class="xp-venue">Patchogue, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="curating">
         <span class="xp-date">Apr 2026</span>
         <div class="xp-title">0xMQQ Collection &middot; <em>Intern</em></div>
         <span class="xp-venue">Internship</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Mar 2026</span>
         <div class="xp-title">Solana Graveyard Hackathon</div>
         <span class="xp-venue">Hackathon</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="talks">
         <span class="xp-date">Feb 2026</span>
         <div class="xp-title"><em>Speaker</em> &middot; NFT Paris Open Day at Artverse &mdash; "Digital Art: What Comes Next?" panel with John Karp, Dominique Moulon, Edouard, Grida</div>
         <span class="xp-venue">Paris, France</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="awards">
         <span class="xp-date">Dec 2025</span>
         <div class="xp-title"><em>Sol Animation Fest</em> &middot; "This Circus Sucks" (collaboration with Essjayne) &mdash; Winner, Solana Culture Award &amp; People's Choice Award</div>
         <span class="xp-venue">Award</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Dec 2025</span>
         <div class="xp-title"><em>One Love Dao</em> &middot; Listen to Your Heart Group Exhibition, Miami Art Week</div>
         <span class="xp-venue">Miami, FL</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Nov 2025</span>
         <div class="xp-title"><em>The Web3Connection</em> &middot; Group Exhibition, presented by The Simulacrum, funded by Superteam Canada</div>
         <span class="xp-venue">Calgary, Canada</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Nov 2025</span>
         <div class="xp-title"><em>Return To Form</em> &middot; Group Exhibition, Burrito DAO at Luma Studios</div>
         <span class="xp-venue">Manhattan, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Oct 2025</span>
         <div class="xp-title"><em>Night Visions</em>, <em>Lights on MOCA</em>, &amp; <em>Art On The Marquee</em> &middot; Three group exhibitions, MOCA Long Island Lights Festival</div>
         <span class="xp-venue">Patchogue, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Aug 2025</span>
         <div class="xp-title"><em>Featured Live Painter</em> &middot; Patchogue Arts Council's Alive After 5 Festival</div>
         <span class="xp-venue">Patchogue, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Jul 2025</span>
         <div class="xp-title">Decentralized Futures Digital Hackathon</div>
         <span class="xp-venue">Hackathon</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Jul 2025</span>
         <div class="xp-title"><em>Guides Community Artist Showcase</em> &middot; Featured on Mallow.art</div>
         <span class="xp-venue">Online</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="talks">
         <span class="xp-date">Jul 2025</span>
         <div class="xp-title"><em>Interview</em> &middot; Drawn to the Mic with Dogame, ExchangeArt</div>
         <span class="xp-venue">Interview</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="awards">
         <span class="xp-date">May 2025</span>
         <div class="xp-title"><em>Grant Recipient</em> &middot; Fubby14's Seeds Project</div>
         <span class="xp-venue">Grant</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="awards">
         <span class="xp-date">Nov 2024</span>
         <div class="xp-title">First Place &middot; LSP's Necromancy November Week #2 Art Prompt Contest</div>
         <span class="xp-venue">Award</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Aug 2024</span>
         <div class="xp-title"><em>Palestinian Relief Fund Fundraiser</em> &middot; Group Exhibition, Mallow.art</div>
         <span class="xp-venue">Online</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="awards">
         <span class="xp-date">Aug 2024</span>
         <div class="xp-title">Wetiko's Curation &amp; Silver Medal &middot; Guides Community Best in Show, LSP Art Show</div>
         <span class="xp-venue">Award</span>
@@ -522,91 +537,91 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
       <button class="xp-group-head" type="button"><span>Early</span><span class="xp-count">15</span><span class="xp-caret"></span></button>
       <div class="xp-group-body">
 
-      <div class="xp">
+      <div class="xp" data-cat="education">
         <span class="xp-date">May 2023</span>
         <div class="xp-title">UX + UI Bootcamp &middot; Springboard</div>
         <span class="xp-venue">Certification</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Apr 2020</span>
         <div class="xp-title"><em>The Gown Project</em> &middot; Designed, prototyped, fundraised and distributed 250 reusable water-resistant medical gowns to healthcare workers at three hospitals and a volunteer ambulance company</div>
         <span class="xp-venue">New York, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Mar 2020</span>
         <div class="xp-title"><em>000ze.Digital</em> &middot; Digital festival &amp; channel broadcasting live music performances during initial COVID lockdown</div>
         <span class="xp-venue">Online</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Sep 2018</span>
         <div class="xp-title">Touring Keyboardist &middot; Animal Show</div>
         <span class="xp-venue">Tour</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Aug 2018</span>
         <div class="xp-title">Directed <em>EST</em> Music Video &middot; Animal Show</div>
         <span class="xp-venue">Music Video</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="various">
         <span class="xp-date">Oct 2017</span>
         <div class="xp-title">Touring Keyboardist &middot; Sloppy Jane</div>
         <span class="xp-venue">Tour</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="education">
         <span class="xp-date">Jun 2015</span>
         <div class="xp-title">BS Psychology, BA Art History &middot; Minors in Neuroscience &amp; Cognitive Science &middot; Brooklyn College</div>
         <span class="xp-venue">Brooklyn, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Jun 2014</span>
         <div class="xp-title">Sculpture Art Installation &middot; Figment Art Festival, Governor's Island</div>
         <span class="xp-venue">New York, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="education">
         <span class="xp-date">May 2014</span>
         <div class="xp-title">National Science Foundation Neuroscience REU Scholar Program</div>
         <span class="xp-venue">Scholar</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Apr 2014</span>
         <div class="xp-title">Interactive Performance Installation &middot; <em>The Body</em> at One of Us: The Chapel</div>
         <span class="xp-venue">Brooklyn, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Oct 2013</span>
         <div class="xp-title"><em>BAZINGA!</em> Art Show</div>
         <span class="xp-venue">Harlem, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Dec 2012</span>
         <div class="xp-title"><em>What Is That Though?</em> Group Art Show</div>
         <span class="xp-venue">Long Island, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Dec 2012</span>
         <div class="xp-title">Ouchi Gallery 100 Artists Exhibition</div>
         <span class="xp-venue">Brooklyn, NY</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="exhibitions">
         <span class="xp-date">Dec 2012</span>
         <div class="xp-title"><em>See . me</em> Group Exhibition &middot; Miami Art Week</div>
         <span class="xp-venue">Miami, FL</span>
       </div>
 
-      <div class="xp">
+      <div class="xp" data-cat="curating">
         <span class="xp-date">Nov 2012</span>
         <div class="xp-title">Curated + Produced <em>Look What I Found</em> Art Show</div>
         <span class="xp-venue">Brooklyn, NY</span>
@@ -858,6 +873,24 @@ footer{flex-direction:column;gap:.5rem;align-items:flex-start;padding:1.5rem 1.2
       group.setAttribute('data-open', open ? 'false' : 'true');
     });
   });
+})();
+
+/* ─── Experience filters ─── */
+(function(){
+  const btns = document.querySelectorAll('.xp-filter');
+  const groups = document.querySelectorAll('.xp-group');
+  const initial = [...groups].map(g => g.getAttribute('data-open'));
+  btns.forEach(b => b.addEventListener('click', () => {
+    const f = b.dataset.f;
+    btns.forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    groups.forEach((g, i) => {
+      let n = 0;
+      g.querySelectorAll('.xp').forEach(x => { const show = f === 'all' || x.dataset.cat === f; x.hidden = !show; if (show) n++; });
+      const c = g.querySelector('.xp-count'); if (c) c.textContent = n;
+      g.hidden = n === 0;
+      g.setAttribute('data-open', f === 'all' ? (initial[i] || 'false') : 'true');
+    });
+  }));
 })();
 
 /* ─── Mobile nav toggle ─── */
